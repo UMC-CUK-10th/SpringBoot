@@ -17,7 +17,7 @@ public enum MissionErrorCode implements BaseErrorCode {
     @Override
     public ErrorReasonDTO getReason() {
         return ErrorReasonDTO.builder()
-                .code(code)
+                .code(code.toString())
                 .message(message)
                 .build();
     }

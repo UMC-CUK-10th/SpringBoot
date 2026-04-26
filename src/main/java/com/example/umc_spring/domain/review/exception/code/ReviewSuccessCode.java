@@ -17,7 +17,7 @@ public enum ReviewSuccessCode implements BaseCode {
     @Override
     public ReasonDTO getReason() {
         return ReasonDTO.builder()
-                .code(code)
+                .code(code.toString())
                 .message(message)
                 .build();
     }

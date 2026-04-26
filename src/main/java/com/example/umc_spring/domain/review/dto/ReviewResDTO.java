@@ -7,9 +7,11 @@ public class ReviewResDTO {
 
     @Getter
     @Builder
-    public static class ReviewPreviewDTO {
-        Long reviewId;
-        String content;
-        Long score;
+    public static class CreateReviewResultDTO {
+        private Long reviewId;
+        private Long restaurantId;
+        private Integer reviewScore;
+        private String reviewContent;
+        private String message;
     }
 }
