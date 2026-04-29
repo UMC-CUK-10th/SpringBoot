@@ -29,7 +29,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // ⭐ H2 (이거 추가한 게 핵심)
+    //  H2 (이거 추가한 게 핵심)
     implementation 'com.h2database:h2'
 
     // MySQL (나중에 쓸 거면 유지)
