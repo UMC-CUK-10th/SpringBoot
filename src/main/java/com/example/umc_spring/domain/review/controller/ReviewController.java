@@ -1,23 +1,27 @@
 package com.example.umc_spring.domain.review.controller;
 
-import com.example.umc_spring.domain.review.converter.ReviewConverter;
+import com.example.umc_spring.domain.review.dto.ReviewReqDTO;
 import com.example.umc_spring.domain.review.dto.ReviewResDTO;
-import com.example.umc_spring.domain.review.service.ReviewService;
 import com.example.umc_spring.global.apiPayload.ApiResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/reviews")
 public class ReviewController {
 
-    private final ReviewService reviewService;
-
-    @GetMapping("/{reviewId}")
-    public ApiResponse<ReviewResDTO.ReviewPreviewDTO> getReview(@PathVariable Long reviewId) {
+    @PostMapping("/restaurants/{restaurantId}/reviews")
+    public ApiResponse<ReviewResDTO.CreateReviewResultDTO> createReview(
+            @RequestHeader("Authorization") String authorization,
+            @PathVariable Long restaurantId,
+            @RequestBody ReviewReqDTO request
+    ) {
         return ApiResponse.onSuccess(
-                ReviewConverter.toReviewPreviewDTO(reviewService.findReview(reviewId))
+                ReviewResDTO.CreateReviewResultDTO.builder()
+                        .reviewId(1L)
+                        .restaurantId(restaurantId)
+                        .reviewScore(request.getReviewScore())
+                        .reviewContent(request.getReviewContent())
+                        .message("리뷰 작성이 완료되었습니다.")
+                        .build()
         );
     }
 }
