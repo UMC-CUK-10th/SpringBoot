@@ -19,7 +19,6 @@ public class MemberController {
                         .memberId(1L)
                         .userName(request.getUserName())
                         .email(request.getEmail())
-                        .message("회원가입이 완료되었습니다.")
                         .build()
         );
     }

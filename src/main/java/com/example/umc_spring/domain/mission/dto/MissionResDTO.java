@@ -30,13 +30,11 @@ public class MissionResDTO {
     @Builder
     public static class MissionChallengeResultDTO {
         private Long missionId;
-        private String message;
     }
 
     @Getter
     @Builder
     public static class MissionSuccessResultDTO {
         private Long userMissionId;
-        private String message;
     }
 }

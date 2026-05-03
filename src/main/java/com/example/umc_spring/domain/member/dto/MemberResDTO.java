@@ -13,7 +13,6 @@ public class MemberResDTO {
         private Long memberId;
         private String userName;
         private String email;
-        private String message;
     }
 
     @Getter

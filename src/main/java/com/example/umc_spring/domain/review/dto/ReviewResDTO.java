@@ -12,6 +12,5 @@ public class ReviewResDTO {
         private Long restaurantId;
         private Integer reviewScore;
         private String reviewContent;
-        private String message;
     }
 }

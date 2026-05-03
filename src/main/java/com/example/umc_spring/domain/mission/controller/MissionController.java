@@ -42,7 +42,6 @@ public class MissionController {
         return ApiResponse.onSuccess(
                 MissionResDTO.MissionChallengeResultDTO.builder()
                         .missionId(missionId)
-                        .message("미션 도전이 완료되었습니다.")
                         .build()
         );
     }
@@ -80,7 +79,6 @@ public class MissionController {
         return ApiResponse.onSuccess(
                 MissionResDTO.MissionSuccessResultDTO.builder()
                         .userMissionId(userMissionId)
-                        .message("미션이 성공 처리되었습니다.")
                         .build()
         );
     }

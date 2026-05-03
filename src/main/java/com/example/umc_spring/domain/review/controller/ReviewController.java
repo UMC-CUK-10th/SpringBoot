@@ -20,7 +20,6 @@ public class ReviewController {
                         .restaurantId(restaurantId)
                         .reviewScore(request.getReviewScore())
                         .reviewContent(request.getReviewContent())
-                        .message("리뷰 작성이 완료되었습니다.")
                         .build()
         );
     }
