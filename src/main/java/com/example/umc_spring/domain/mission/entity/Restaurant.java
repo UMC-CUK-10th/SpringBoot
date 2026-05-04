@@ -1,19 +1,14 @@
 package com.example.umc_spring.domain.mission.entity;
 
-import com.example.umc_spring.domain.mission.entity.mapping.MissionExecutionHistory;
-import com.example.umc_spring.domain.review.entity.Review;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
 @Entity
-@Table(name = "restaurant")
+@Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Table(name = "restaurant")
 public class Restaurant {
 
     @Id
@@ -21,21 +16,12 @@ public class Restaurant {
     @Column(name = "restaurant_id")
     private Long id;
 
-    @Column(name = "restaurant_name", length = 20, nullable = false)
-    private String name;
+    @Column(name = "restaurant_name", nullable = false)
+    private String restaurantName;
 
-    @Column(name = "restaurant_location", length = 255, nullable = false)
-    private String location;
+    @Column(name = "restaurant_location", nullable = false)
+    private String restaurantLocation;
 
-    @Column(name = "owner_number", length = 25, nullable = false)
+    @Column(name = "owner_number")
     private String ownerNumber;
-
-    @OneToMany(mappedBy = "restaurant")
-    private List<Mission> missions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "restaurant")
-    private List<MissionExecutionHistory> missionExecutionHistories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "restaurant")
-    private List<Review> reviews = new ArrayList<>();
 }

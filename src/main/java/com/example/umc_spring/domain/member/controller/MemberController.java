@@ -1,39 +1,35 @@
 package com.example.umc_spring.domain.member.controller;
 
-import com.example.umc_spring.domain.member.dto.MemberReqDTO;
 import com.example.umc_spring.domain.member.dto.MemberResDTO;
+import com.example.umc_spring.domain.member.service.MemberService;
+import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 import com.example.umc_spring.global.apiPayload.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
+@RequiredArgsConstructor
 public class MemberController {
 
-    @PostMapping("/auth/signup")
-    public ApiResponse<MemberResDTO.SignUpResultDTO> signUp(
-            @RequestBody MemberReqDTO.SignUpDTO request
-    ) {
+    private final MemberService memberService;
+
+    @GetMapping("/users/me")
+    public ApiResponse<MemberResDTO.MyPageDTO> getMyPage() {
+        Long userId = 1L;
+
         return ApiResponse.onSuccess(
-                MemberResDTO.SignUpResultDTO.builder()
-                        .memberId(1L)
-                        .userName(request.getUserName())
-                        .email(request.getEmail())
-                        .build()
+                memberService.getMyPage(userId)
         );
     }
 
-    @GetMapping("/home")
-    public ApiResponse<MemberResDTO.HomeInfoDTO> getHomeInfo(
-            @RequestHeader("Authorization") String authorization
+    @GetMapping("/home/missions")
+    public ApiResponse<MissionResDTO.MissionListDTO> getHomeMissions(
+            @RequestParam String location,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
     ) {
         return ApiResponse.onSuccess(
-                MemberResDTO.HomeInfoDTO.builder()
-                        .userName("지영")
-                        .userAddress("서울시 영등포구")
-                        .availableMissionCount(5)
-                        .favoriteFoods(List.of("한식", "일식", "양식"))
-                        .build()
+                memberService.getHomeMissions(location, page, size)
         );
     }
 }

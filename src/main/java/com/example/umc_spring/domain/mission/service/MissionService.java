@@ -1,7 +1,13 @@
 package com.example.umc_spring.domain.mission.service;
 
-import com.example.umc_spring.domain.mission.entity.Mission;
+import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 
 public interface MissionService {
-    Mission findMission(Long missionId);
+
+    MissionResDTO.MissionListDTO getMyMissions(
+            Long userId,
+            String status,
+            Integer page,
+            Integer size
+    );
 }
