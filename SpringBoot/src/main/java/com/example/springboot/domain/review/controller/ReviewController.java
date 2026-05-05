@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ReviewController {
 
+    private final com.example.springboot.domain.review.service.ReviewService reviewService;
+
     // 2. 리뷰 작성
     @PostMapping("/missions/{mission_id}/reviews")
     @Operation(summary = "리뷰 작성 API", description = "특정 미션에 대한 리뷰를 작성합니다.")
@@ -20,7 +22,7 @@ public class ReviewController {
             @PathVariable(name = "mission_id") Long missionId,
             @RequestBody ReviewReqDTO.WriteDTO request
     ) {
-        // Service 호출 생략
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, null);
+        ReviewResDTO.WriteResultDTO result = reviewService.writeReview(missionId, request);
+        return ApiResponse.onSuccess(GeneralSuccessCode.OK, result);
     }
 }

@@ -27,26 +27,32 @@ public class UsersController {
     @Operation(summary = "홈 화면 조회 API", description = "지역별 미션 목록과 사용자 정보를 조회합니다.")
     @Parameters({
             @Parameter(name = "region", description = "지역 ID"),
-            @Parameter(name = "cursor", description = "페이징 커서"),
-            @Parameter(name = "size", description = "페이징 크기")
+            @Parameter(name = "page", description = "페이지 번호 (0부터 시작)"),
+            @Parameter(name = "size", description = "페이지 크기")
     })
     public ApiResponse<UsersResDTO.HomeResDTO> getHome(
             @RequestParam(name = "region") Long regionId,
-            @RequestParam(name = "cursor", required = false) Integer cursor,
-            @RequestParam(name = "size", defaultValue = "10") Integer size
+            @RequestParam(name = "page", defaultValue = "0") Integer page
     ) {
-        // Service 호출 생략
-        return ApiResponse.onSuccess(UsersSuccessCode.OK, null);
+        // 임시로 1번 유저 사용
+        UsersResDTO.HomeResDTO result = usersService.getHome(1L, regionId, page);
+        return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
-
+    
     // 3. 미션 목록 조회
     @GetMapping("/users/me/missions")
-    @Operation(summary = "나의 미션 목록 조회 API", description = "진행 중 또는 완료된 미션 목록을 조회합니다.")
+    @Operation(summary = "나의 미션 목록 조회 API", description = "진행 중 또는 완료된 미션 목록을 상태별로 조회합니다. 'status' 파라미터를 통해 진행 중(CHALLENGING)과 완료(COMPLETED) 목록을 구분합니다.")
+    @Parameters({
+            @Parameter(name = "status", description = "미션 상태 (CHALLENGING: 진행 중, COMPLETED: 완료)"),
+            @Parameter(name = "page", description = "페이지 번호 (0부터 시작)")
+    })
     public ApiResponse<List<MissionResDTO.UserMissionListDTO>> getMyMissions(
-            @RequestParam(name = "status") UserMissionStatus status
+            @RequestParam(name = "status") UserMissionStatus status,
+            @RequestParam(name = "page", defaultValue = "0") Integer page
     ) {
-        // Service 호출 생략
-        return ApiResponse.onSuccess(UsersSuccessCode.OK, null);
+        // 임시로 1번 유저 사용
+        List<MissionResDTO.UserMissionListDTO> result = usersService.getMyMissions(1L, status, page);
+        return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
 
     // 4. 미션 성공 누르기
@@ -69,11 +75,12 @@ public class UsersController {
         return ApiResponse.onSuccess(UsersSuccessCode.OK, null);
     }
 
-    // 마이페이지
-    @PostMapping("/v1/users/me")
-    public ApiResponse<UsersResDTO.GetInfo> getInfo(
-            @RequestBody UsersReqDTO.GetInfo dto
-    ) {
-        return ApiResponse.onSuccess(UsersSuccessCode.OK, usersService.getInfo(dto));
+    // 4. 마이페이지 (프로필 정보)
+    @GetMapping("/users/me")
+    @Operation(summary = "마이페이지 조회 API", description = "사용자의 프로필 정보를 조회합니다.")
+    public ApiResponse<UsersResDTO.GetInfo> getMyInfo() {
+        // 임시로 1번 유저 사용
+        UsersResDTO.GetInfo result = usersService.getMyInfo(1L);
+        return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
 }

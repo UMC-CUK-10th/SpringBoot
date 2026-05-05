@@ -9,7 +9,7 @@ public class UsersResDTO {
 
     @Builder
     public record GetInfo(
-            String name,
+            String nickname,
             String email,
             String phoneNumber,
             Long point

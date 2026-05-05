@@ -9,7 +9,7 @@ public class UsersConverter {
     public static UsersResDTO.GetInfo toGetInfo(Users users) {
         return UsersResDTO.GetInfo.builder()
                 .email(users.getEmail())
-                .name(users.getName())
+                .nickname(users.getNickname())
                 .point(users.getUserPoint())
                 .phoneNumber(users.getUserPhoneNumber())
                 .build();
