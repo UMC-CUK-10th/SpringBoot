@@ -1,51 +1,66 @@
 package com.example.umc10th.domain.mission.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class MissionResDTO {
 
+    @Getter
     @Builder
-    public record MissionListResponse(
-            List<MissionInfoResponse> missions,
-            Integer page,
-            Integer size,
-            Boolean hasNext
-    ) {
+    @AllArgsConstructor
+    public static class MissionListResponseDTO {
+        private List<MissionPreviewDTO> missions;
+        private PageInfoDTO pageInfo;
     }
 
+    @Getter
     @Builder
-    public record MissionInfoResponse(
-            Long userMissionId,
-            Long missionId,
-            Integer rewardPoint,
-            String storeName,
-            String missionContent,
-            String status,
-            LocalDateTime completedAt
-    ) {
+    @AllArgsConstructor
+    public static class MissionPreviewDTO {
+        private Long missionId;
+        private Long storeId;
+        private String storeName;
+        private String category;
+        private String missionContent;
+        private Integer rewardPoint;
+        private Long dDay;
     }
 
+    // 내가 진행중/진행완료한 미션 목록 응답 DTO
+    @Getter
     @Builder
-    public record MissionDetailResponse(
-            Long missionId,
-            String storeName,
-            String category,
-            String missionContent,
-            Integer rewardPoint,
-            String status,
-            String successStoreCode
-    ) {
+    @AllArgsConstructor
+    public static class MyMissionListResponseDTO {
+        private List<MyMissionDTO> missions;
+        private PageInfoDTO pageInfo;
     }
 
+    // 내가 진행중/진행완료한 미션 1개 DTO
+    @Getter
     @Builder
-    public record MissionSuccessResponse(
-            Long userMissionId,
-            String status,
-            LocalDateTime completedAt,
-            Integer rewardPoint
-    ) {
+    @AllArgsConstructor
+    public static class MyMissionDTO {
+        private Long memberMissionId;
+        private Long missionId;
+        private String storeName;
+        private String missionContent;
+        private Integer rewardPoint;
+        private Boolean isComplete;
+        private String status;
+        private String buttonText;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class PageInfoDTO {
+        private Integer page;
+        private Integer size;
+        private Long totalElements;
+        private Integer totalPages;
+        private Boolean hasNext;
     }
 }
