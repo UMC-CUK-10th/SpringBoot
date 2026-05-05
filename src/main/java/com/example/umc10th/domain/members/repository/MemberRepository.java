@@ -1,8 +1,8 @@
 package com.example.umc10th.domain.members.repository;
 
-import com.example.umc10th.domain.members.dto.MemberReqDTO;
-import com.example.umc10th.domain.members.dto.MemberResDTO;
+import com.example.umc10th.domain.members.entity.Members;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository {
+public interface MemberRepository extends JpaRepository<Members, Long> {
 
 }

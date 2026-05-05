@@ -8,10 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class StoreResDTO {
     public static class StoreListDTO {
         List<StoreSummaryDTO> storeList;
@@ -33,6 +29,10 @@ public class StoreResDTO {
         Float rating;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ReviewListDTO {
         List<ReviewViewDTO> reviewList;
         Integer listSize;

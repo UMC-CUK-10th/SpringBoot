@@ -7,22 +7,30 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ReviewResDTO {
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ReviewWritePageDTO {
         Long storeId;
         String storeName;
     }
-
+    
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyReviewListDTO {
         List<MyReviewViewDTO> reviewList;
         Integer listSize;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyReviewViewDTO {
         Long reviewId;
         String storeName;

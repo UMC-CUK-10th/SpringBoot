@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.Qnas.exception.code;
+package com.example.umc10th.domain.qnas.exception.code;
 
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.Getter;

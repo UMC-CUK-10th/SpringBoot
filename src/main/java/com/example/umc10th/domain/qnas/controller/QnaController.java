@@ -1,8 +1,8 @@
-package com.example.umc10th.domain.Qnas.controller;
+package com.example.umc10th.domain.qnas.controller;
 
-import com.example.umc10th.domain.Qnas.dto.QnaReqDTO;
-import com.example.umc10th.domain.Qnas.dto.QnaResDTO;
-import com.example.umc10th.domain.Qnas.exception.code.QnaSuccessCode;
+import com.example.umc10th.domain.qnas.dto.QnaReqDTO;
+import com.example.umc10th.domain.qnas.dto.QnaResDTO;
+import com.example.umc10th.domain.qnas.exception.code.QnaSuccessCode;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

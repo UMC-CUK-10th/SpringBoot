@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.Qnas.dto;
+package com.example.umc10th.domain.qnas.dto;
 
 import java.time.LocalDateTime;
 

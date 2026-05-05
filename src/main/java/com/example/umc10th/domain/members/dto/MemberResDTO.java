@@ -1,11 +1,22 @@
 package com.example.umc10th.domain.members.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 public class MemberResDTO {
-    public record SignUpResultDTO(
-            Long memberId,
-            LocalDateTime createAt
-    ) {}
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyPageDTO {
+        String nickname;
+        String email;
+        String phoneNumber;
+        Integer totalPoint;
+    }
 }
 
