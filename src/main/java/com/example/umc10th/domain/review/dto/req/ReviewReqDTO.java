@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.review.dto;
+package com.example.umc10th.domain.review.dto.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 public class ReviewReqDTO {
 
-    // 리뷰 추가 API
+    // 리뷰 작성 DTO
     @Getter
     @Setter
     @Schema(name = "ReviewCreateRequest")
