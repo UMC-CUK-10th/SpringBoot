@@ -1,6 +1,6 @@
 package com.example.umc10thchunsam.domain.member.dto.res;
 
-import com.example.chunsam.domain.member.enums.Gender;
+import com.example.umc10thchunsam.domain.member.enums.Gender;
 
 import java.time.LocalDate;
 import java.util.Date;

@@ -1,12 +1,19 @@
 package com.example.umc10thchunsam.domain.member.entity;
 
 
+import com.example.umc10thchunsam.domain.member.entity.mapping.MemberAlert;
+import com.example.umc10thchunsam.domain.member.entity.mapping.MemberMission;
+import com.example.umc10thchunsam.domain.member.entity.mapping.MemberPreferenceFood;
+import com.example.umc10thchunsam.domain.member.entity.mapping.MemberPromise;
 import com.example.umc10thchunsam.domain.member.enums.Gender;
+import com.example.umc10thchunsam.domain.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Builder
@@ -16,7 +23,6 @@ import java.util.Date;
 @Table(name = "member")
 public class Member {
 
-    /*
 
     @OneToMany(mappedBy ="member", fetch = FetchType.LAZY)
     private List<MemberPromise> memberPromise = new ArrayList<>();
@@ -33,8 +39,6 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 
-
-     */
 
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
