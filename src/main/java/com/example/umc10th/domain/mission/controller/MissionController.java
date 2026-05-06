@@ -2,29 +2,35 @@ package com.example.umc10th.domain.mission.controller;
 
 import com.example.umc10th.domain.mission.dto.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
+import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/missions")
 public class MissionController {
 
+    private final MissionService missionService;
+
     @GetMapping
-    public ApiResponse<List<MissionResDTO.MissionInfo>> getMissions() {
+    public ApiResponse<Page<MissionResDTO.MissionInfo>> getMissions(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
 
-        List<MissionResDTO.MissionInfo> result = List.of(
-                new MissionResDTO.MissionInfo(1L, "운동하기", "SUCCESS"),
-                new MissionResDTO.MissionInfo(2L, "물 마시기", "FAIL")
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                missionService.getMissions(pageable)
         );
-
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, result);
     }
 
     @GetMapping("/{missionId}")
@@ -32,29 +38,32 @@ public class MissionController {
             @PathVariable Long missionId
     ) {
 
-        MissionResDTO.MissionDetail result =
-                new MissionResDTO.MissionDetail(
-                        missionId,
-                        "운동하기",
-                        "하루 30분 운동",
-                        100
-                );
-
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, result);
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                missionService.getMissionDetail(missionId)
+        );
     }
 
     @PostMapping
     public ApiResponse<String> createMission(
             @RequestBody MissionReqDTO.CreateMission request
     ) {
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, "미션 생성 완료");
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                "미션 생성 완료"
+        );
     }
 
     @PostMapping("/{missionId}/complete")
     public ApiResponse<String> completeMission(
             @PathVariable Long missionId
     ) {
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, "성공 처리");
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                "성공 처리"
+        );
     }
 
     @PostMapping("/{missionId}/verify")
@@ -62,18 +71,22 @@ public class MissionController {
             @PathVariable Long missionId,
             @RequestBody MissionReqDTO.VerifyMission request
     ) {
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, "인증 완료");
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                "인증 완료"
+        );
     }
 
     @GetMapping("/participations")
-    public ApiResponse<List<MissionResDTO.MissionInfo>> getByStatus(
-            @RequestParam String status
+    public ApiResponse<Page<MissionResDTO.MissionInfo>> getByStatus(
+            @RequestParam String status,
+            @PageableDefault(size = 10) Pageable pageable
     ) {
 
-        List<MissionResDTO.MissionInfo> result = List.of(
-                new MissionResDTO.MissionInfo(1L, "운동하기", status)
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                missionService.getMissionsByStatus(status, pageable)
         );
-
-        return ApiResponse.onSuccess(GeneralSuccessCode.OK, result);
     }
 }
