@@ -10,29 +10,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import com.example.umc10th.domain.member.dto.MemberReqDTO;
+import com.example.umc10th.domain.member.dto.MemberResDTO;
+import com.example.umc10th.domain.member.service.MemberService;
+import com.example.umc10th.domain.global.apiPayload.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/members")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberService memberQueryService;
 
-    // 회원가입
-    @PostMapping("/users")
-    public ApiResponse<MemberResDTO.SignUpResultDTO> signUp(
-            @RequestBody MemberReqDTO.SignUpDTO request
+    /**
+     * 과제 1: 내가 진행중인 미션 조회 (오프셋 페이지네이션)
+     * - 사용자 ID 를 Request Body 로 수신
+     *
+     * POST /members/missions/challenging
+     * Body: { "memberId": 1, "page": 0, "size": 10 }
+     */
+    @PostMapping("/missions/challenging")
+    public ApiResponse<MemberResDTO.MissionListRes> getChallengingMissions(
+            @RequestBody @Valid MemberReqDTO.GetMissionListReq request
     ) {
-        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_OK, null);
-    }
-
-    // 마이페이지 리뷰 조회
-    @GetMapping("/users/me/reviews")
-    public ApiResponse<Page<Review>> getMyReviews(Pageable pageable) {
-
-        return ApiResponse.onSuccess(
-                MemberSuccessCode.MEMBER_OK,
-                memberService.getMyReviews(1L, pageable)
-        );
+        MemberResDTO.MissionListRes result = memberQueryService.getChallengingMissions(request);
+        return ApiResponse.onSuccess(result);
     }
 }
