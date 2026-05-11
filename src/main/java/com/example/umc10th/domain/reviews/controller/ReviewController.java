@@ -5,6 +5,7 @@ import com.example.umc10th.domain.reviews.dto.ReviewResDTO;
 import com.example.umc10th.domain.reviews.exception.code.ReviewSuccessCode;
 import com.example.umc10th.domain.reviews.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class ReviewController {
     public ApiResponse<String> createReview(
             @PathVariable Long storeId,
             @RequestParam Long memberId, // 임시로 쿼리 파라미터로 받음
-            @RequestBody ReviewReqDTO.CreateReviewDTO request) {
+            @RequestBody @Valid ReviewReqDTO.CreateReviewDTO request) {
         reviewService.createReview(storeId, memberId, request);
 
         return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_CREATE_OK, "리뷰 등록 성공");
@@ -34,7 +35,15 @@ public class ReviewController {
 
     // 나의 리뷰 목록 조회
     @GetMapping("/list")
-    public ApiResponse<ReviewResDTO.MyReviewListDTO> getMyReviews() {
-        return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_LIST_OK, null);
+    public ApiResponse<ReviewResDTO.MyReviewListDTO> getMyReviews(
+            @RequestParam Long memberId,
+            @RequestParam(required = false) Long lastId,
+            @RequestParam(required = false) Float lastRating,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "latest") String sort) {
+
+        return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_LIST_OK,
+                reviewService.getMyReviewList(memberId, lastId, lastRating, size, sort));
     }
+
 }

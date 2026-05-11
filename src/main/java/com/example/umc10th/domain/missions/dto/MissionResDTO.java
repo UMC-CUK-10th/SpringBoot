@@ -33,4 +33,12 @@ public class MissionResDTO {
         Integer rewardPoint;
         Boolean isCompleted;
     }
+
+    // 공통 페이지네이션 규격
+    @Builder
+    public record Pagination<T> (
+            List<T> data,
+            Integer pageNumber,
+            Integer pageSize
+    ){}
 }
