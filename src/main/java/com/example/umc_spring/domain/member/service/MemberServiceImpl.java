@@ -5,6 +5,7 @@ import com.example.umc_spring.domain.member.entity.Member;
 import com.example.umc_spring.domain.member.repository.MemberRepository;
 import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 import com.example.umc_spring.domain.mission.entity.Mission;
+import com.example.umc_spring.domain.mission.enums.MissionStatus;
 import com.example.umc_spring.domain.mission.repository.MissionRepository;
 import com.example.umc_spring.domain.mission.repository.UserMissionRepository;
 import com.example.umc_spring.domain.review.repository.ReviewRepository;
@@ -31,8 +32,16 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
 
         Long reviewCount = reviewRepository.countByMemberId(userId);
-        Long inProgressCount = userMissionRepository.countByMemberIdAndMissionStatus(userId, "IN_PROGRESS");
-        Long successCount = userMissionRepository.countByMemberIdAndMissionStatus(userId, "SUCCESS");
+
+        Long inProgressCount = userMissionRepository.countByMemberIdAndMissionStatus(
+                userId,
+                "IN_PROGRESS"
+        );
+
+        Long successCount = userMissionRepository.countByMemberIdAndMissionStatus(
+                userId,
+                "SUCCESS"
+        );
 
         return MemberResDTO.MyPageDTO.builder()
                 .userId(member.getId())
@@ -70,7 +79,10 @@ public class MemberServiceImpl implements MemberService {
                 .missionList(missionList)
                 .page(missionPage.getNumber())
                 .size(missionPage.getSize())
-                .hasNext(missionPage.hasNext())
+                .totalPage(missionPage.getTotalPages())
+                .totalElements(missionPage.getTotalElements())
+                .isFirst(missionPage.isFirst())
+                .isLast(missionPage.isLast())
                 .build();
     }
 }

@@ -1,59 +1,45 @@
 package com.example.umc_spring.domain.mission.service;
 
+import com.example.umc_spring.domain.mission.converter.MissionConverter;
+import com.example.umc_spring.domain.mission.dto.MissionReqDTO;
 import com.example.umc_spring.domain.mission.dto.MissionResDTO;
-import com.example.umc_spring.domain.mission.entity.Mission;
 import com.example.umc_spring.domain.mission.entity.UserMission;
+import com.example.umc_spring.domain.mission.enums.MissionStatus;
+import com.example.umc_spring.domain.mission.repository.MissionRepository;
 import com.example.umc_spring.domain.mission.repository.UserMissionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MissionServiceImpl implements MissionService {
 
+    private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
 
     @Override
-    public MissionResDTO.MissionListDTO getMyMissions(
-            Long userId,
-            String status,
-            Integer page,
-            Integer size
+    public MissionResDTO.MyMissionPageDTO getMyOngoingMissions(
+            MissionReqDTO.MyMissionRequestDTO request
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserMission> userMissionPage = userMissionRepository.findMyMissions(
-                userId,
-                status,
-                pageable
+        Pageable pageable = PageRequest.of(
+                request.getPageNumber(),
+                request.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "id")
         );
 
-        List<MissionResDTO.MissionPreviewDTO> missionList = userMissionPage.getContent()
-                .stream()
-                .map(userMission -> {
-                    Mission mission = userMission.getMission();
+        Page<UserMission> userMissionPage =
+                userMissionRepository.findMyMissions(
+                        request.getUserId(),
+                        "IN_PROGRESS",
+                        pageable
+                );
 
-                    return MissionResDTO.MissionPreviewDTO.builder()
-                            .missionId(mission.getId())
-                            .restaurantName(mission.getRestaurant().getRestaurantName())
-                            .restaurantLocation(mission.getRestaurant().getRestaurantLocation())
-                            .missionTitle(mission.getMissionTitle())
-                            .missionCondition(mission.getMissionCondition())
-                            .rewardPoint(mission.getReward())
-                            .missionStatus(userMission.getMissionStatus())
-                            .build();
-                })
-                .toList();
-
-        return MissionResDTO.MissionListDTO.builder()
-                .missionList(missionList)
-                .page(userMissionPage.getNumber())
-                .size(userMissionPage.getSize())
-                .hasNext(userMissionPage.hasNext())
-                .build();
+        return MissionConverter.toMyMissionPageDTO(userMissionPage);
     }
 }
