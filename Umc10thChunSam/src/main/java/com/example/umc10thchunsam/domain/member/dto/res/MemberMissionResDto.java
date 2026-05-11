@@ -1,6 +1,6 @@
 package com.example.umc10thchunsam.domain.member.dto.res;
 
-import com.example.chunsam.domain.mission.enums.MissionStatus;
+import com.example.umc10thchunsam.domain.mission.enums.MissionStatus;
 
 import java.time.LocalDate;
 
