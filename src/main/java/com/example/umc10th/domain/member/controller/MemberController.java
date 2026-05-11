@@ -1,105 +1,65 @@
 package com.example.umc10th.domain.member.controller;
 
+import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
+import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
+import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
-import org.springframework.http.ResponseEntity;
+import com.example.umc10th.global.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class MemberController {
 
-    @PostMapping("/users/Auth")
-    public ResponseEntity<ApiResponse<MemberResDTO.SignUpResponse>> signUp(
-            @RequestBody MemberReqDTO.SignUpRequest request
-    ) {
+    private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-        MemberResDTO.SignUpResponse response = MemberResDTO.SignUpResponse.builder()
-                .userId(1L)
-                .email(request.email())
-                .nickname(request.nickname())
-                .build();
-
-        return ResponseEntity
-                .status(MemberSuccessCode.SIGNUP_SUCCESS.getStatus())
-                .body(ApiResponse.onSuccess(MemberSuccessCode.SIGNUP_SUCCESS, response));
+    public MemberController(MemberService memberService, JwtTokenProvider jwtTokenProvider) {
+        this.memberService = memberService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @GetMapping("/home")
-    public ResponseEntity<ApiResponse<MemberResDTO.HomeResponse>> getHome(
-            @RequestHeader("Authorization") String authorization
+    @PostMapping("/Auth")
+    public ApiResponse<MemberResDTO.SignUpResultDTO> signUp(
+            @RequestBody @Valid MemberReqDTO.SignUpDTO request
     ) {
+        Member member = memberService.signUp(request);
 
-        MemberResDTO.HomeMissionResponse mission1 = MemberResDTO.HomeMissionResponse.builder()
-                .missionId(1L)
-                .storeName("반이학생마라탕")
-                .category("중식당")
-                .missionContent("10,000원 이상의 식사 시")
-                .rewardPoint(500)
-                .dDay(7)
-                .build();
-
-        MemberResDTO.HomeMissionResponse mission2 = MemberResDTO.HomeMissionResponse.builder()
-                .missionId(2L)
-                .storeName("반이학생마라탕")
-                .category("중식당")
-                .missionContent("10,000원 이상의 식사 시")
-                .rewardPoint(500)
-                .dDay(7)
-                .build();
-
-        MemberResDTO.HomeResponse response = MemberResDTO.HomeResponse.builder()
-                .nickname("안함둥")
-                .point(999999)
-                .completedMissionCount(7)
-                .goalMissionCount(10)
-                .goalRewardPoint(1000)
-                .missions(List.of(mission1, mission2))
-                .build();
-
-        return ResponseEntity
-                .status(MemberSuccessCode.HOME_FOUND.getStatus())
-                .body(ApiResponse.onSuccess(MemberSuccessCode.HOME_FOUND, response));
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.SIGNUP_SUCCESS,
+                MemberConverter.toSignUpResultDTO(member)
+        );
     }
 
-    @GetMapping("/points")
-    public ResponseEntity<ApiResponse<MemberResDTO.PointResponse>> getPoints(
-            @RequestHeader("Authorization") String authorization,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
+    @PostMapping("/login")
+    public ApiResponse<MemberResDTO.LoginResultDTO> login(
+            @RequestBody @Valid MemberReqDTO.LoginDTO request
     ) {
+        MemberResDTO.LoginResultDTO result = memberService.login(request);
 
-        MemberResDTO.PointHistoryResponse history1 = MemberResDTO.PointHistoryResponse.builder()
-                .pointHistoryId(1L)
-                .type("MISSION_REWARD")
-                .amount(500)
-                .description("가게이름 예시 미션 성공 보상")
-                .createdAt(LocalDateTime.of(2026, 3, 26, 15, 10))
-                .build();
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.LOGIN_SUCCESS,
+                result
+        );
+    }
 
-        MemberResDTO.PointHistoryResponse history2 = MemberResDTO.PointHistoryResponse.builder()
-                .pointHistoryId(2L)
-                .type("MISSION_REWARD")
-                .amount(1000)
-                .description("10개 미션 완료 추가 보상")
-                .createdAt(LocalDateTime.of(2026, 3, 26, 15, 20))
-                .build();
+    @GetMapping("/mypage")
+    public ApiResponse<MemberResDTO.MyPageResponseDTO> getMyPage(
+            @Parameter(hidden = true)
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        Long memberId = jwtTokenProvider.getMemberIdFromAuthorizationHeader(authorizationHeader);
 
-        MemberResDTO.PointResponse response = MemberResDTO.PointResponse.builder()
-                .totalPoint(999999)
-                .histories(List.of(history1, history2))
-                .page(page)
-                .size(size)
-                .hasNext(false)
-                .build();
+        MemberResDTO.MyPageResponseDTO response = memberService.getMyPage(memberId);
 
-        return ResponseEntity
-                .status(MemberSuccessCode.POINT_FOUND.getStatus())
-                .body(ApiResponse.onSuccess(MemberSuccessCode.POINT_FOUND, response));
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.MYPAGE_FOUND,
+                response
+        );
     }
 }

@@ -1,39 +1,49 @@
 package com.example.umc10th.domain.review.controller;
 
-import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
-import org.springframework.http.ResponseEntity;
+import com.example.umc10th.domain.review.service.ReviewService;
+import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/reviews")
+@SecurityRequirement(name = "JWT")
 public class ReviewController {
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<ReviewResDTO.CreateReviewResponse>> createReview(
-            @RequestHeader("Authorization") String authorization,
-            @RequestBody ReviewReqDTO.CreateReviewRequest request
+    private final ReviewService reviewService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public ReviewController(
+            ReviewService reviewService,
+            JwtTokenProvider jwtTokenProvider
     ) {
+        this.reviewService = reviewService;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
-        ReviewResDTO.CreateReviewResponse response = ReviewResDTO.CreateReviewResponse.builder()
-                .reviewId(1L)
-                .userMissionId(request.userMissionId())
-                .rating(request.rating())
-                .content(request.content())
-                .imageUrls(List.of(
-                        "https://example.com/reviews/1.jpg",
-                        "https://example.com/reviews/2.jpg"
-                ))
-                .createdAt(LocalDateTime.of(2026, 3, 26, 16, 0))
-                .build();
+    @PostMapping
+    public ApiResponse<ReviewResDTO.CreateReviewResultDTO> createReview(
+            @Parameter(hidden = true)
+            @RequestHeader("Authorization") String authorizationHeader,
 
-        return ResponseEntity
-                .status(ReviewSuccessCode.REVIEW_CREATED.getStatus())
-                .body(ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_CREATED, response));
+            @RequestBody @Valid ReviewReqDTO.CreateReviewDTO request
+    ) {
+        Long memberId = jwtTokenProvider.getMemberIdFromAuthorizationHeader(authorizationHeader);
+
+        ReviewResDTO.CreateReviewResultDTO result = reviewService.createReview(
+                memberId,
+                request
+        );
+
+        return ApiResponse.onSuccess(
+                ReviewSuccessCode.CREATE_REVIEW_SUCCESS,
+                result
+        );
     }
 }

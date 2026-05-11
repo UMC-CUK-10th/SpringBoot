@@ -1,59 +1,110 @@
 package com.example.umc10th.domain.member.dto;
 
-import lombok.Builder;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 public class MemberResDTO {
 
-    @Builder
-    public record SignUpResponse(
-            Long userId,
-            String email,
-            String nickname
-    ) {
+    public static class SignUpResultDTO {
+
+        private Long memberId;
+        private String email;
+        private String nickname;
+
+        public SignUpResultDTO(Long memberId, String email, String nickname) {
+            this.memberId = memberId;
+            this.email = email;
+            this.nickname = nickname;
+        }
+
+        public Long getMemberId() {
+            return memberId;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
     }
 
-    @Builder
-    public record HomeResponse(
-            String nickname,
-            Integer point,
-            Integer completedMissionCount,
-            Integer goalMissionCount,
-            Integer goalRewardPoint,
-            List<HomeMissionResponse> missions
-    ) {
+    public static class LoginResultDTO {
+
+        private Long memberId;
+        private String email;
+        private String nickname;
+        private String accessToken;
+
+        public LoginResultDTO(Long memberId, String email, String nickname, String accessToken) {
+            this.memberId = memberId;
+            this.email = email;
+            this.nickname = nickname;
+            this.accessToken = accessToken;
+        }
+
+        public Long getMemberId() {
+            return memberId;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
     }
 
-    @Builder
-    public record HomeMissionResponse(
-            Long missionId,
-            String storeName,
-            String category,
-            String missionContent,
-            Integer rewardPoint,
-            Integer dDay
-    ) {
-    }
+    public static class MyPageResponseDTO {
 
-    @Builder
-    public record PointResponse(
-            Integer totalPoint,
-            List<PointHistoryResponse> histories,
-            Integer page,
-            Integer size,
-            Boolean hasNext
-    ) {
-    }
+        private Long memberId;
+        private String email;
+        private String nickname;
+        private String phoneNumber;
+        private Boolean isPhoneVerified;
+        private Integer point;
 
-    @Builder
-    public record PointHistoryResponse(
-            Long pointHistoryId,
-            String type,
-            Integer amount,
-            String description,
-            LocalDateTime createdAt
-    ) {
+        public MyPageResponseDTO(
+                Long memberId,
+                String email,
+                String nickname,
+                String phoneNumber,
+                Boolean isPhoneVerified,
+                Integer point
+        ) {
+            this.memberId = memberId;
+            this.email = email;
+            this.nickname = nickname;
+            this.phoneNumber = phoneNumber;
+            this.isPhoneVerified = isPhoneVerified;
+            this.point = point;
+        }
+
+        public Long getMemberId() {
+            return memberId;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public Boolean getIsPhoneVerified() {
+            return isPhoneVerified;
+        }
+
+        public Integer getPoint() {
+            return point;
+        }
     }
 }

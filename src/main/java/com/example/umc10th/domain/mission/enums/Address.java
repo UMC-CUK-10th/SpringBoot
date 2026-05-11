@@ -1,4 +1,30 @@
 package com.example.umc10th.domain.mission.enums;
 
 public enum Address {
+    ANAM,
+    GANGNAM,
+    JONGNO,
+    JUNG,
+    YONGSAN,
+    SEONGDONG,
+    GWANGJIN,
+    DONGDAEMUN,
+    JUNGNANG,
+    SEONGBUK,
+    GANGBUK,
+    DOBONG,
+    NOWON,
+    EUNPYEONG,
+    SEODAEMUN,
+    MAPO,
+    YANGCHEON,
+    GANGSEO,
+    GURO,
+    GEUMCHEON,
+    YEONGDEUNGPO,
+    DONGJAK,
+    GWANAK,
+    SEOCHO,
+    SONGPA,
+    GANGDONG
 }
