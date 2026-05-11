@@ -4,13 +4,17 @@ import com.example.umc10th.domain.member.enums.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class MemberRequestDTO {
 
+    // 내 정보 조회 (회원 탈퇴도 ? 마이 페이지도??)
     public record GetInfo(
-            Long id,
+            Long id
+    ){}
+
+    // 회원 가입
+    public record CreateInfo(
             String username,
+            String name,
             String password,
             Gender gender,
             String birth,
@@ -19,4 +23,20 @@ public class MemberRequestDTO {
             String address,
             String addressDetail
     ){}
+
+    // 회원 수정
+    public record UpdateInfo(
+            String name,
+            String password,
+            String email,
+            String address,
+            String addressDetail
+    ){}
+
+    // 로그인
+    public record LoginInfo(
+            String username,
+            String password
+    ){}
+
 }

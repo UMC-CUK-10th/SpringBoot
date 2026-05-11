@@ -1,8 +1,7 @@
-package com.example.umc10th.domain.review.entity;
+package com.example.umc10th.domain.store.entity.mapping;
 
-import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.store.entity.Store;
-import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,25 +13,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "review")
-public class Review extends BaseEntity {
+@Table(name = "store_mission")
+public class StoreMission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", nullable = false)
-    private String content;
-
-    @Column(name = "star", nullable = false)
-    private Float star;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Member member;
+    @JoinColumn(name = "mission_id")
+    private Mission mission;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
-
 }

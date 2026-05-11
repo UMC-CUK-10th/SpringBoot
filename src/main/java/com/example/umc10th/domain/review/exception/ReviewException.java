@@ -1,11 +1,9 @@
 package com.example.umc10th.domain.review.exception;
 
-import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
+import com.example.umc10th.global.apiPayload.exception.ProjectException;
 
-@Getter
-@RequiredArgsConstructor
-public class ReviewException extends RuntimeException {
-    private final ReviewErrorCode errorCode;
+
+public class ReviewException extends ProjectException {
+    public ReviewException(BaseErrorCode errorCode) { super(errorCode); }
 }

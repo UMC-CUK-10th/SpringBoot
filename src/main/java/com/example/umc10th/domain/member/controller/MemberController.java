@@ -18,40 +18,40 @@ public class MemberController {
     private final MemberService memberService;
 
     // 내 정보 조회
-    @GetMapping("/users/{userId}")
+    @GetMapping("/users/me")
     public APIResponse<MemberResponseDTO.GetInfo> getMember(
-            @PathVariable Long userId,
-            @RequestBody MemberRequestDTO.GetInfo dto) {
+            @RequestBody MemberRequestDTO.GetInfo dto
+    ) {
+
+        MemberResponseDTO.GetInfo resDTO = memberService.getInfo(dto);
 
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code, memberService.getInfo(dto));
+        return APIResponse.onSuccess(code, resDTO);
     }
 
-    // 회원 가입 (/auth)
-    @PostMapping("/users")
-    public APIResponse<MemberResponseDTO.GetInfo> joinMember(
+    // 마이 페이지
+    @GetMapping("/users/mypages")
+    public APIResponse<MemberResponseDTO.MyPage> getMyPage(
             @RequestBody MemberRequestDTO.GetInfo dto
     ){
+        MemberResponseDTO.MyPage resDTO = memberService.getMyPage(dto);
+
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code, memberService.getInfo(dto));
+        return APIResponse.onSuccess(code, resDTO);
     }
 
-
-    // 회원 탈퇴
-    @DeleteMapping("/users/{userId}")
-    public APIResponse<Object> leaveMember(@PathVariable Long userId){
-        BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code,null);
-    }
-
-    // 회원 수정
-    @PatchMapping("/users/{userId}")
-    public APIResponse<MemberResponseDTO.GetInfo> updateMember(
-            @PathVariable Long userId,
-            @RequestBody MemberRequestDTO.GetInfo dto
+    // 홈 화면
+    @GetMapping("/users")
+    public APIResponse<MemberResponseDTO.Home> getHome(
+            @RequestBody MemberRequestDTO.GetInfo dto,
+            @RequestParam Long localId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
+        MemberResponseDTO.Home resDTO = memberService.getHome(dto, localId, page, size);
+
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code,memberService.getInfo(dto));
+        return APIResponse.onSuccess(code, resDTO);
     }
 
 }

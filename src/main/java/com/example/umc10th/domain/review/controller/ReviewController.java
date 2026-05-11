@@ -21,11 +21,13 @@ public class ReviewController {
 
     // 리뷰 작성
     @PostMapping("/reviews")
-    public APIResponse<ReviewResponseDTO.GetInfo> createReview(
-            @RequestBody ReviewRequestDTO.GetInfo dto
+    public APIResponse<ReviewResponseDTO.CreateReview> createReview(
+            @RequestBody ReviewRequestDTO.CreateReview dto
     ){
+
+        ReviewResponseDTO.CreateReview resDTO = reviewService.createReview(dto);
         BaseSuccessCode code = ReviewSuccessCode.OK;
 
-        return APIResponse.onSuccess(code, reviewService.getInfo(dto));
+        return APIResponse.onSuccess(code, resDTO);
     }
 }

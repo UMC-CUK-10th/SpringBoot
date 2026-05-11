@@ -1,12 +1,9 @@
 package com.example.umc10th.domain.member.exception;
 
 
-import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
+import com.example.umc10th.global.apiPayload.exception.ProjectException;
 
-@Getter
-@RequiredArgsConstructor
-public class MemberException extends RuntimeException {
-    private final MemberErrorCode errorCode;
+public class MemberException extends ProjectException {
+    public MemberException(BaseErrorCode errorCode) { super(errorCode); }
 }

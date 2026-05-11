@@ -1,10 +1,17 @@
 package com.example.umc10th.domain.review.dto;
 
+import java.time.LocalDateTime;
+
 public class ReviewRequestDTO {
 
-    public record GetInfo(
-            Long id,
+    // 리뷰 작성
+    public record CreateReview(
+
             String content,
-            Integer star
+            Float star,
+            LocalDateTime cratedAt,
+            Long userId,
+            Long storeId
+
     ){}
 }
