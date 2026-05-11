@@ -12,6 +12,8 @@ import com.example.umc10thchunsam.global.anotation.PageUnderOne;
 import com.example.umc10thchunsam.global.apiPayload.ApiResponse;
 import com.example.umc10thchunsam.global.apiPayload.code.GeneralSuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
@@ -65,16 +67,17 @@ public class MissionController {
     }
 
 
-
+// 필수 1번 미션
     @Operation(
             summary = "유저가 가진 진행중인 미션을 페이지 단위 가져오기",
             description = "페이지네이션으로 제공합니다."
     )
     @GetMapping("/member/{memberId}/Progress")
     public ApiResponse<MissionRes.MemberProgressMisssion> getMissionProgress
-            (@PathVariable("memberId") Long memberId,
+            (@PathVariable("memberId") @NotNull Long memberId,
              @RequestParam(defaultValue = "1") @PageUnderOne int page
             ) {
+
         MissionReq.GetMemberProgressMission req = new MissionReq.GetMemberProgressMission(memberId);
         MissionRes.MemberProgressMisssion res = missionService.getMemberProgressMission(req,page);
 
