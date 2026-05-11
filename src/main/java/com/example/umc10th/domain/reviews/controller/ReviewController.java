@@ -3,6 +3,7 @@ package com.example.umc10th.domain.reviews.controller;
 import com.example.umc10th.domain.reviews.dto.ReviewReqDTO;
 import com.example.umc10th.domain.reviews.dto.ReviewResDTO;
 import com.example.umc10th.domain.reviews.exception.code.ReviewSuccessCode;
+import com.example.umc10th.domain.reviews.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,19 +13,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reviews")
 public class ReviewController {
 
+    private final ReviewService reviewService;
     // 리뷰 작성
-    @PostMapping("/{store_id}/create")
+    @PostMapping("/{storeId}/create")
     public ApiResponse<String> createReview(
-            @PathVariable(name = "store_id") Long storeId,
+            @PathVariable Long storeId,
+            @RequestParam Long memberId, // 임시로 쿼리 파라미터로 받음
             @RequestBody ReviewReqDTO.CreateReviewDTO request) {
+        reviewService.createReview(storeId, memberId, request);
 
         return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_CREATE_OK, "리뷰 등록 성공");
     }
 
     // 리뷰 작성 페이지 정보 조회
-    @GetMapping("/{store_id}")
+    @GetMapping("/{storeId}")
     public ApiResponse<ReviewResDTO.ReviewWritePageDTO> getReviewPageInfo(
-            @PathVariable(name = "store_id") Long storeId) {
+            @PathVariable Long storeId) {
         return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_INFO_OK, null);
     }
 

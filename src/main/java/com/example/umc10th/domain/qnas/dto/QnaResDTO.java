@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.Qnas.dto;
+package com.example.umc10th.domain.qnas.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class QnaResDTO {
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class QnaListDTO {
         List<QnaViewDTO> qnaList;
         Integer listSize;

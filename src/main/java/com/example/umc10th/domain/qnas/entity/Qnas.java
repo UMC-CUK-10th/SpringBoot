@@ -1,35 +1,34 @@
-package com.example.umc10th.domain.members.entity.mapping;
+package com.example.umc10th.domain.qnas.entity;
 
 import com.example.umc10th.domain.members.entity.Members;
-import com.example.umc10th.domain.members.entity.Notifications;
+import com.example.umc10th.domain.qnas.entity.mapping.QnaTypes;
 import com.example.umc10th.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "memberNotifications")
-public class MemberNotifications extends BaseEntity {
+@Table(name = "qnas")
+public class Qnas extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberNotiId;
+    private Long id;
 
-    @Column(nullable = false)
-    private Boolean isAgreed;
+    @Column(nullable = false, length = 100)
+    private String title;
 
-    private LocalDateTime agreedAt;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Members members;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "noti_id")
-    private Notifications notifications;
+    @JoinColumn(name = "qnaType_id")
+    private QnaTypes qnaTypes;
 }

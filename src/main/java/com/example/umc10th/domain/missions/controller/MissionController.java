@@ -1,10 +1,14 @@
 package com.example.umc10th.domain.missions.controller;
 
+import com.example.umc10th.domain.missions.converter.MissionConverter;
 import com.example.umc10th.domain.missions.dto.MissionReqDTO;
 import com.example.umc10th.domain.missions.dto.MissionResDTO;
+import com.example.umc10th.domain.missions.entity.mapping.MemberMissions;
 import com.example.umc10th.domain.missions.exception.code.MissionSuccessCode;
+import com.example.umc10th.domain.missions.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -13,13 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class MissionController {
 
-    // 홈 화면 내 미션 목록 조회
-    @GetMapping("/regions/{regionId}/missions")
-    public ApiResponse<MissionResDTO.MissionListDTO> getMissions(
-            @PathVariable Long regionId,
-            @RequestParam Boolean isCompleted) {
+    private final MissionService missionService;
 
-        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_OK, null);
+    // 내 미션 목록 조회
+    @GetMapping("/members/{memberId}/missions")
+    public ApiResponse<MissionResDTO.MissionListDTO> getMissions(
+            @PathVariable Long memberId,
+            @RequestParam Boolean isCompleted,
+            @RequestParam(name = "page") Integer page) {
+
+        Page<MemberMissions> missionPage = missionService.getMemberMissionList(memberId, isCompleted, page);
+
+        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_OK,
+                MissionConverter.toMissionListDTO(missionPage));
     }
 
     // 미션 성공 요청 전송
