@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.mission.dto;
+package com.example.umc10th.domain.mission.dto.res;
 
 import lombok.Builder;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MissionResDTO {
 
-    // 미션 목록 조회하기 API
+    // 미션 목록 조회 DTO
     @Builder
     public record PreviewMissionDTO(
             Long missionId,
@@ -27,7 +27,7 @@ public class MissionResDTO {
             Boolean isLast
     ) {}
 
-    // 미션 성공 누르기 API
+    // 미션 성공 누르기 DTO
     @Builder
     public record CompletedMissionDTO(
             Long memberMissionId,

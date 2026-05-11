@@ -24,6 +24,6 @@ public enum MissionSuccessCode implements BaseSuccessCode {
 
     @Override
     public HttpStatus getStatus() {
-        return null;
+        return httpStatus;
     }
 }

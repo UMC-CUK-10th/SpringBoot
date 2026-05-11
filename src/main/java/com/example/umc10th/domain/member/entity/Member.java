@@ -1,20 +1,27 @@
 package com.example.umc10th.domain.member.entity;
 
+import com.example.umc10th.domain.member.entity.mapping.MemberFood;
+import com.example.umc10th.domain.member.entity.mapping.MemberTerm;
 import com.example.umc10th.domain.member.enums.Gender;
 import com.example.umc10th.domain.member.enums.Status;
+import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import com.example.umc10th.domain.review.entity.Review;
+import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
 @Table(name = "member")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,4 +59,23 @@ public class Member {
 
     @Column(name = "inactiveDate")
     private LocalDateTime inactiveDate;
+
+    // 연관관계 매핑
+    @OneToMany(mappedBy = "member")
+    private List<MemberMission> missions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberTerm> term = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberFood> memberFood = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Review> reviews = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "member")
+//    private List<MemberNotification> notifications = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<Inquiry> inquiries = new ArrayList<>();
 }
