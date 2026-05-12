@@ -19,8 +19,7 @@ public class MemberMissionQueryServiceImpl implements MemberMissionQueryService 
     private static final int PAGE_SIZE = 10;
     private final MemberMissionRepository memberMissionRepository;
 
-    private Page<MemberMission> findMissions(Long memberId, Integer page, MissionStatus missionStatus) {
-        var pageRequest = PageRequest.of(page - 1, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "updatedAt"));
+    private Page<MemberMission> findMissions(Long memberId, MissionStatus missionStatus, PageRequest pageRequest) {
         return switch (missionStatus) {
             case IN_PROGRESS -> memberMissionRepository.findByMemberAndStatusOngoing(
                     memberId,
@@ -36,18 +35,24 @@ public class MemberMissionQueryServiceImpl implements MemberMissionQueryService 
         };
     }
 
+    private PageRequest createPageRequest(Integer pageSize, Integer pageNumber) {
+        return PageRequest.of(pageNumber - 1, pageSize, Sort.by("id").descending());
+    }
+
     // 미션 목록 조회 API
     @Override
     @Transactional(readOnly = true)
-    public MemberMissionResDTO.MissionListDTO getMissions(Long memberId, Integer page, MissionStatus missionStatus) {
-        return MemberMissionConverter.toMissionListDTO(findMissions(memberId, page, missionStatus));
+    public MemberMissionResDTO.Pagination<MemberMissionResDTO.MemberMissionDTO> getMissions(Long memberId, Integer pageSize, Integer pageNumber, MissionStatus missionStatus) {
+        PageRequest pageRequest = createPageRequest(pageSize, pageNumber);
+        return MemberMissionConverter.toMissionPagination(findMissions(memberId, missionStatus, pageRequest));
     }
 
     // 진행 중인 미션 조회 API
     @Override
     @Transactional(readOnly = true)
     public MemberMissionResDTO.InProgressMissionListDTO getInProgressMissions(Long memberId, Integer page) {
-        var missions = findMissions(memberId, page, MissionStatus.IN_PROGRESS);
+        PageRequest pageRequest = createPageRequest(PAGE_SIZE, page);
+        var missions = findMissions(memberId, MissionStatus.IN_PROGRESS, pageRequest);
         return MemberMissionConverter.toInProgressMissionListDTO(missions);
     }
 
@@ -55,7 +60,8 @@ public class MemberMissionQueryServiceImpl implements MemberMissionQueryService 
     @Override
     @Transactional(readOnly = true)
     public MemberMissionResDTO.CompletedMissionListDTO getCompletedMissions(Long memberId, Integer page) {
-        var missions = findMissions(memberId, page, MissionStatus.COMPLETED);
+        PageRequest pageRequest = createPageRequest(PAGE_SIZE, page);
+        var missions = findMissions(memberId, MissionStatus.COMPLETED, pageRequest);
         return MemberMissionConverter.toCompletedMissionListDTO(missions);
     }
 }

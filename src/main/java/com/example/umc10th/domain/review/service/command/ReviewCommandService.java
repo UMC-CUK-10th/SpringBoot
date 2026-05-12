@@ -6,5 +6,8 @@ import com.example.umc10th.domain.review.dto.res.ReviewResDTO;
 public interface ReviewCommandService {
 
     // 리뷰 작성 API
-    ReviewResDTO.CreateReviewDTO createReview(Long restId, Long memberId, ReviewReqDTO.CreateReviewDTO dto);
+    ReviewResDTO.CreateReviewDTO createReview(Long restaurantId, Long memberId, ReviewReqDTO.CreateReviewDTO dto);
+
+    // 리뷰 조회 API
+    ReviewResDTO.Pagination<ReviewResDTO.GetReviewDTO> getReviews(Long restaurantId, Integer pageSize, String cursor, String query);
 }

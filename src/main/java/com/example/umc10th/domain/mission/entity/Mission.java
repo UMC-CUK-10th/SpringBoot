@@ -5,7 +5,7 @@ import com.example.umc10th.domain.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +21,14 @@ public class Mission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
-    private String content;
-
     @Column(name = "deadline", nullable = false)
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     @Column(name = "point", nullable = false)
-    private Long point;
+    private int point;
+
+    @Column(name = "conditional", columnDefinition = "TEXT", nullable = false)
+    private String conditional;
 
     @Column(name = "price", nullable = false)
     private Long price;

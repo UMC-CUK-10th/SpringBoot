@@ -12,20 +12,31 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api")
 @Validated
 public class ReviewController {
 
     private final ReviewCommandService reviewCommandService;
 
     // 리뷰 작성 API
-    @PostMapping("/restaurants/{restId}/reviews")
+    @PostMapping("/restaurants/{restaurantId}/reviews")
     public ApiResponse<ReviewResDTO.CreateReviewDTO> createReview(
-            @PathVariable Long restId,
+            @PathVariable Long restaurantId,
             @RequestParam("memberId") Long memberId,
             @RequestBody @Valid ReviewReqDTO.CreateReviewDTO request
     ) {
-        return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_CREATE_OK, reviewCommandService.createReview(restId, memberId, request)
+        return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_CREATE_OK, reviewCommandService.createReview(restaurantId, memberId, request)
         );
+    }
+
+    // 리뷰 조회 API (커서 기반 페이징)
+    @GetMapping("/restaurants/{restaurantId}/reviews")
+    public ApiResponse<ReviewResDTO.Pagination<ReviewResDTO.GetReviewDTO>> getReviews(
+            @PathVariable Long restaurantId,
+            @RequestParam Integer pageSize,
+            @RequestParam String cursor,
+            @RequestParam String query
+    ) {
+        return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_FOUND_OK, reviewCommandService.getReviews(restaurantId, pageSize, cursor, query));
     }
 }
