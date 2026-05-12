@@ -34,6 +34,7 @@ public class UsersService {
     private final UserMissionRepository userMissionRepository;
     private final MissionRepository missionRepository;
     private final RegionRepository regionRepository;
+    private final com.example.springboot.domain.review.repository.ReviewRepository reviewRepository;
 
     public UsersResDTO.GetInfo getMyInfo(Long userId) {
         Users users = usersRepository.findById(userId)
@@ -47,6 +48,34 @@ public class UsersService {
 
         Page<UserMission> userMissions = userMissionRepository.findByUsersAndUserMissionStatus(user, status, PageRequest.of(page, 10));
         return MissionConverter.toUserMissionListDTOList(userMissions);
+    }
+
+    public UsersResDTO.OngoingMissionListDTO getOngoingMissions(UsersReqDTO.OngoingMissionReqDTO request) {
+        Users user = usersRepository.findById(request.userId())
+                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+
+        Integer page = (request.page() == null) ? 0 : request.page();
+        Page<UserMission> userMissions = userMissionRepository.findByUsersAndUserMissionStatus(
+                user, UserMissionStatus.CHALLENGING, PageRequest.of(page, 10));
+
+        return UsersConverter.toOngoingMissionListDTO(userMissions);
+    }
+
+    public UsersResDTO.ReviewListDTO getMyReviews(Long userId, String sortBy, Long lastId, Integer lastFavorite, Integer size) {
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+
+        int pageSize = (size == null) ? 10 : size;
+        org.springframework.data.domain.Slice<com.example.springboot.domain.review.entity.Review> reviews;
+
+        if ("rating".equals(sortBy)) {
+            reviews = reviewRepository.findByUsersByFavoriteCursor(user, lastFavorite, lastId, PageRequest.of(0, pageSize));
+        } else {
+            reviews = reviewRepository.findByUsersAndIdLessThanOrderByIdDesc(user, lastId, PageRequest.of(0, pageSize));
+        }
+
+        return com.example.springboot.domain.review.converter.ReviewConverter.toReviewListDTO(
+                reviews.getContent(), !reviews.hasPrevious(), !reviews.hasNext());
     }
 
     public UsersResDTO.HomeResDTO getHome(Long userId, Long regionId, Integer page) {

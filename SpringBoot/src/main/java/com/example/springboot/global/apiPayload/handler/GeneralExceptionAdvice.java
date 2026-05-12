@@ -35,4 +35,22 @@ public class GeneralExceptionAdvice {
                         )
                 );
     }
+
+    // Bean Validation 예외 처리
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<java.util.Map<String, String>>> handleMethodArgumentNotValidException(
+            org.springframework.web.bind.MethodArgumentNotValidException ex
+    ) {
+        java.util.Map<String, String> errors = new java.util.HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        BaseErrorCode code = GeneralErrorCode.BAD_REQUEST;
+        return ResponseEntity.status(code.getStatus())
+                .body(ApiResponse.onFailure(
+                                code,
+                                errors
+                        )
+                );
+    }
 }

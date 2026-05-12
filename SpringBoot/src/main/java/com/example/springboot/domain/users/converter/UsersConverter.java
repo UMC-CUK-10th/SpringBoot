@@ -14,4 +14,19 @@ public class UsersConverter {
                 .phoneNumber(users.getUserPhoneNumber())
                 .build();
     }
+
+    public static UsersResDTO.OngoingMissionListDTO toOngoingMissionListDTO(org.springframework.data.domain.Page<com.example.springboot.domain.users.entity.UserMission> userMissions) {
+        java.util.List<com.example.springboot.domain.mission.dto.MissionResDTO.UserMissionListDTO> missionList = userMissions.getContent().stream()
+                .map(com.example.springboot.domain.mission.converter.MissionConverter::toUserMissionListDTO)
+                .collect(java.util.stream.Collectors.toList());
+
+        return UsersResDTO.OngoingMissionListDTO.builder()
+                .isLast(userMissions.isLast())
+                .isFirst(userMissions.isFirst())
+                .totalPage(userMissions.getTotalPages())
+                .totalElements(userMissions.getTotalElements())
+                .listSize(missionList.size())
+                .missionList(missionList)
+                .build();
+    }
 }
