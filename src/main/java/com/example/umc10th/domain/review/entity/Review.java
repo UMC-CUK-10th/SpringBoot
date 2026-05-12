@@ -5,10 +5,10 @@ import com.example.umc10th.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.NoArgsConstructor;
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class Review {
 
     @Id
@@ -17,7 +17,7 @@ public class Review {
 
     private String content;
 
-    private Integer score;
+    private Float score;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
