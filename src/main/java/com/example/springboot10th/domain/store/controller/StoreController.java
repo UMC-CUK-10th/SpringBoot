@@ -12,7 +12,6 @@ public class StoreController {
     @PostMapping
     public ApiResponse<StoreResponseDTO.RegisterStoreResponse> registerStore(
             @RequestBody StoreRequestDTO.RegisterStoreRequest request) {
-        
 
         return null;
     }

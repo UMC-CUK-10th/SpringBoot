@@ -1,62 +1,25 @@
 package com.example.springboot10th.domain.mission.controller;
 
-import com.example.springboot10th.domain.mission.dto.MissionRequestDTO;
-import com.example.springboot10th.domain.mission.dto.MissionResponseDTO;
-import com.example.springboot10th.global.apiPayload.ApiResponse;
+import com.example.springboot10th.domain.mission.entity.Mission;
+import com.example.springboot10th.domain.mission.service.MissionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/missions")
 public class MissionController {
 
-        @GetMapping
-        public ApiResponse<MissionResponseDTO.MissionListResponse> getMissions(
-                        @RequestParam(required = false) String region,
-                        @RequestParam(required = false) String status,
-                        @RequestParam(defaultValue = "0") Integer page,
-                        @RequestParam(defaultValue = "10") Integer size) {
+    private final MissionService missionService;
 
-                return null;
-        }
-
-        @GetMapping("/me")
-        public ApiResponse<MissionResponseDTO.MissionListResponse> getMyMissions() {
-                return null;
-        }
-
-        @GetMapping("/me/progress")
-        public ApiResponse<MissionResponseDTO.MissionProgressResponse> getMyMissionProgress() {
-
-                return null;
-        }
-
-        @PatchMapping("/{missionId}")
-        public ApiResponse<MissionResponseDTO.MissionStatusResponse> updateMissionStatus(
-                        @PathVariable Long missionId,
-                        @RequestParam String status) {
-
-
-                return null;
-        }
-
-        @PostMapping("/{missionId}/reviews")
-        public ApiResponse<MissionResponseDTO.ReviewResponse> createReview(
-                        @PathVariable Long missionId,
-                        @RequestBody MissionRequestDTO.ReviewRequest request) {
-
-
-                return null;
-        }
-
-        @PostMapping("/{missionId}/reviews/{reviewId}")
-        public ApiResponse<MissionResponseDTO.ReviewResponse> updateReview(
-                        @PathVariable Long missionId,
-                        @PathVariable Long reviewId,
-                        @RequestBody MissionRequestDTO.ReviewEditRequest request) {
-
-
-                return null;
-        }
+    @GetMapping("/regions/{regionName}")
+    public ResponseEntity<String> getMissionsByRegion(
+            @PathVariable("regionName") String regionName,
+            @RequestParam(name = "page", defaultValue = "0") Integer page) {
+        
+        Page<Mission> missions = missionService.getMissionsByRegion(regionName, page);
+        return ResponseEntity.ok(regionName + " 지역 미션 목록 조회 성공 (총 페이지: " + missions.getTotalPages() + ", 현재 페이지: " + missions.getNumber() + ")");
+    }
 }
