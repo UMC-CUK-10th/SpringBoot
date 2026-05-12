@@ -9,10 +9,22 @@ public class UsersReqDTO {
 
     // 5. 회원가입
     public record JoinDTO(
+            @jakarta.validation.constraints.NotBlank
             String user_name,
+            @jakarta.validation.constraints.NotBlank
             String nickname,
+            @jakarta.validation.constraints.NotBlank
             String user_phone_number,
+            @jakarta.validation.constraints.Email
             String email,
+            @jakarta.validation.constraints.NotBlank
             String user_password
+    ) {}
+
+    // 진행 중인 미션 조회
+    public record OngoingMissionReqDTO(
+            @jakarta.validation.constraints.NotNull
+            Long userId,
+            Integer page
     ) {}
 }
