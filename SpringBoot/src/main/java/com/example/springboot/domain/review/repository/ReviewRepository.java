@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    // 1. ID 순 (DESC)
+    // 1. ID 순 (최신순 DESC)
     @Query("SELECT r FROM Review r WHERE r.users = :user AND (:lastId IS NULL OR r.id < :lastId) ORDER BY r.id DESC")
     Slice<Review> findByUsersAndIdLessThanOrderByIdDesc(@Param("user") Users user, @Param("lastId") Long lastId, Pageable pageable);
 

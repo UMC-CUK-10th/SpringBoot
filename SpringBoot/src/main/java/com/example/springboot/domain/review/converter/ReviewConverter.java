@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 public class ReviewConverter {
 
+    // 리뷰 요약 정보 변환 (사진 제외)
+
     public static UsersResDTO.ReviewPreViewDTO toReviewPreViewDTO(Review review) {
         return UsersResDTO.ReviewPreViewDTO.builder()
                 .reviewId(review.getId())

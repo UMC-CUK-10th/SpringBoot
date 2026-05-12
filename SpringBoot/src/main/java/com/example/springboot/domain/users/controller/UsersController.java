@@ -22,7 +22,7 @@ public class UsersController {
 
     private final UsersService usersService;
 
-    // 1. 홈 화면
+    // 1. 홈 화면 조회 (지역별 미션 목록)
     @GetMapping("/home")
     @Operation(summary = "홈 화면 조회 API", description = "지역별 미션 목록과 사용자 정보를 조회합니다.")
     @Parameters({

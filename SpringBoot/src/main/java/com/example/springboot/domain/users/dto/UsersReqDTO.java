@@ -7,7 +7,7 @@ public class UsersReqDTO {
             Long id
     ) {}
 
-    // 5. 회원가입
+    // 5. 회원가입 (Validation 적용)
     public record JoinDTO(
             @jakarta.validation.constraints.NotBlank
             String user_name,
