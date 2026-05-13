@@ -1,48 +1,55 @@
 package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.enums.Gender;
-import com.example.umc10th.domain.mission.enums.Address;
+import com.example.umc10th.domain.member.enums.SocialType;
+import com.example.umc10th.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "member")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(name = "gender")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
 
-    @Column(name = "birth")
+    @Column(nullable = false)
     private LocalDate birth;
 
-    @Column(name = "address")
+    @Column(nullable = false, length = 255)
+    private String address;
+
+    @Column(nullable = false, length = 255)
+    private String detailAddress;
+
+    @Column(length = 255)
+    private String socialUid;
+
     @Enumerated(EnumType.STRING)
-    private Address address;
+    private SocialType socialType;
 
-    // --- 여기서부터 첫 번째 이미지(Converter)를 위해 추가된 필드들입니다 ---
+    @Column(nullable = false)
+    private Integer point = 0;
 
-    @Column(name = "email")
+    @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(name = "point")
-    private Integer point; // 포인트는 보통 Integer 자료형을 사용합니다.
-
-    @Column(name = "phone_number")
+    @Column(length = 15)
     private String phoneNumber;
 
-    @Column(name = "profile_url")
-    private String profileUrl;
+    private LocalDateTime deletedAt;
 }
