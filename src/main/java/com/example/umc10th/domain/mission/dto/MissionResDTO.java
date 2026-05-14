@@ -1,17 +1,25 @@
 package com.example.umc10th.domain.mission.dto;
 
+import java.util.List;
+
 public class MissionResDTO {
 
-    public record MissionInfo(
+    public record MyMissionResponse(
             Long missionId,
-            String title,
-            String status
-    ) {}
+            String content,
+            Integer reward,
+            Long storeId,
+            String storeName
+    ) {
+    }
 
-    public record MissionDetail(
-            Long missionId,
-            String title,
-            String description,
-            int reward
-    ) {}
+    public record MyMissionListResponse(
+            List<MyMissionResponse> missionList,
+            Integer listSize,
+            Integer totalPage,
+            Long totalElements,
+            Boolean isFirst,
+            Boolean isLast
+    ) {
+    }
 }
