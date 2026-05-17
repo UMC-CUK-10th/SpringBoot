@@ -1,5 +1,6 @@
 package com.example.umc_spring.domain.member.service;
 
+import com.example.umc_spring.domain.member.dto.MemberReqDTO;
 import com.example.umc_spring.domain.member.dto.MemberResDTO;
 import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 
@@ -12,4 +13,6 @@ public interface MemberService {
             Integer page,
             Integer size
     );
+
+    MemberResDTO.JoinResultDTO join(MemberReqDTO.JoinDTO request);
 }

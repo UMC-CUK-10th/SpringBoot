@@ -19,6 +19,12 @@ public class Member {
     @Column(name = "user_name", nullable = false)
     private String userName;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
     @Column(name = "gender")
     private String gender;
 
