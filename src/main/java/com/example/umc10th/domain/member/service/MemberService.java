@@ -1,19 +1,12 @@
 package com.example.umc10th.domain.member.service;
 
-import com.example.umc10th.domain.review.entity.Review;
-import com.example.umc10th.domain.review.repository.ReviewRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import com.example.umc10th.domain.member.dto.MemberReqDTO;
+import com.example.umc10th.domain.member.dto.MemberResDTO;
 
-@Service
-@RequiredArgsConstructor
-public class MemberService {
+public interface MemberService {
 
-    private final ReviewRepository reviewRepository;
-
-    public Page<Review> getMyReviews(Long memberId, Pageable pageable) {
-        return reviewRepository.findMyReviews(memberId, pageable);
-    }
+    /**
+     * 과제 1: 진행중인 미션 조회 (오프셋 페이지네이션)
+     */
+    MemberResDTO.MissionListRes getChallengingMissions(MemberReqDTO.GetMissionListReq request);
 }

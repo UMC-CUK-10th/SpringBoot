@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -37,5 +38,14 @@ public class Review {
     }
 
     public void setRating(float rating) {
+    }
+
+    public Long getId() {
+    }
+
+    public Float getScore() {
+    }
+
+    public LocalDateTime getCreatedAt() {
     }
 }

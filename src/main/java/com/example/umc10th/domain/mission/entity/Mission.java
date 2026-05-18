@@ -25,4 +25,13 @@ public class Mission {
 
     @OneToMany(mappedBy = "mission")
     private List<MemberMission> memberMissions = new ArrayList<>();
+
+    public Long getId() {
+    }
+
+    public Integer getPoint() {
+    }
+
+    public String getConditional() {
+    }
 }

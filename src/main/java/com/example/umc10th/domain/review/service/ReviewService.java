@@ -1,29 +1,13 @@
 package com.example.umc10th.domain.review.service;
 
-import com.example.umc10th.domain.member.entity.Member;
-import com.example.umc10th.domain.member.repository.MemberRepository;
-import com.example.umc10th.domain.review.entity.Review;
-import com.example.umc10th.domain.review.repository.ReviewRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.example.umc10th.domain.review.dto.ReviewReqDTO;
+import com.example.umc10th.domain.review.dto.ReviewResDTO;
 
-@Service
-@RequiredArgsConstructor
-public class ReviewService {
+public interface ReviewService {
 
-    private final ReviewRepository reviewRepository;
-    private final MemberRepository memberRepository;
-
-    public void createReview(Long memberId, Long missionId, String content, float rating) {
-
-        Member member = memberRepository.findById(memberId).orElseThrow();
-
-        Review review = new Review();
-        review.setMember(member);
-        review.setMissionId(missionId);
-        review.setContent(content);
-        review.setRating(rating);
-
-        reviewRepository.save(review);
-    }
+    /**
+     * 과제 2: 내가 작성한 리뷰 목록 조회 (커서 기반 페이지네이션)
+     * - ID순(최신순) / 별점순 지원
+     */
+    ReviewResDTO.ReviewListRes getMyReviews(ReviewReqDTO.GetReviewListReq request);
 }
