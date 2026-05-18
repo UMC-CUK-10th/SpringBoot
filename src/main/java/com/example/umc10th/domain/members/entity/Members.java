@@ -39,7 +39,6 @@ public class Members extends BaseEntity {
 
     @Column(length = 50)
     private String email;
-
     private Integer totalPoint;
 
     @Column(length = 20)
@@ -47,7 +46,14 @@ public class Members extends BaseEntity {
 
     private Boolean isVerified;
 
+    @Column(nullable = false, length = 100)
+    private String password;
+
     @Builder.Default
     @OneToMany(mappedBy = "members", cascade = CascadeType.ALL)
     private List<MemberPreferences> memberPreferenceList = new ArrayList<>();
+
+    public void encodePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }
