@@ -6,10 +6,12 @@ import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.APIResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,19 +19,24 @@ import java.util.Map;
 @RequestMapping("/api")
 public class MissionController {
 
+
+    // Get 방식으로 RequestBody 받고 있는 메서드들 JWT 방식으로 멤버 id 받는 걸로 바꿔야 함
+
+
     private final MissionService missionService;
 
-    // 내 미션 목록 조회 (진행 중, 완료 포함)
+    // 내 미션 목록 조회 (진행 중, 완료)
     @GetMapping("/users/missions")
-    public APIResponse<Page<MissionResponseDTO.GetInfo>> getMissions(
+    public APIResponse<MissionResponseDTO.Pagination<MissionResponseDTO.GetMyMissions>> getMyMissions(
             @RequestParam(value = "complete") Boolean complete,
-            @RequestBody MissionRequestDTO.GetInfo dto,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestBody MissionRequestDTO.GetMyMissions dto,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String sort
             ){
 
-        // complete 값이 null 이면 모든 미션 조회, 값이 있으면 해당 상태의 미션만 조회
-        Page<MissionResponseDTO.GetInfo> missions = missionService.getInfo(dto, complete, page, size);
+        MissionResponseDTO.Pagination<MissionResponseDTO.GetMyMissions> missions =
+                missionService.GetMyMissions(dto, complete, pageNumber, pageSize, sort);
 
         BaseSuccessCode code = MissionSuccessCode.OK;
 
@@ -46,5 +53,24 @@ public class MissionController {
 
         return APIResponse.onSuccess(code,null);
     }
+
+//    // 가게 미션 생성
+//    @PostMapping("stores/{storeId}/missions")
+//    public APIResponse<Void> createMission(
+//            @PathVariable Long storeId,
+//            @RequestBody MissionRequestDTO.CreatedMission dto
+//    ){
+//        BaseSuccessCode code = MissionSuccessCode.CREATED;
+//        return APIResponse.onSuccess(code, missionService.createMission(storeId, dto));
+//    }
+//
+//    // 가게 내 미션들 조회
+//    @GetMapping("/stores/{storeId}/missions")
+//    public APIResponse<List<MissionResponseDTO.GetMission>> getMissions(
+//            @PathVariable Long storeId
+//    ){
+//        BaseSuccessCode code = MissionSuccessCode.OK;
+//        return APIResponse.onSuccess(code, missionService.getMissions(storeId));
+//    }
 
 }

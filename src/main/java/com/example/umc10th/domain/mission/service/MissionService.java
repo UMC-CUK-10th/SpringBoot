@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,24 +31,40 @@ public class MissionService {
     private final MemberRepository memberRepository;
 
 
-    // 내 미션 목록 조회 (모든 미션 조회 구현 해야 함)
-    public Page<MissionResponseDTO.GetInfo> getInfo(
-            MissionRequestDTO.GetInfo dto,
+    // 내 미션 목록 조회 (진행 중, 완료)
+    public MissionResponseDTO.Pagination<MissionResponseDTO.GetMyMissions> GetMyMissions(
+            MissionRequestDTO.GetMyMissions dto,
             Boolean isCompleted,
-            int page,
-            int size
+            Integer pageNumber,
+            Integer pageSize,
+            String sort
     ){
 
         Member member = memberRepository.findById(dto.userId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sortInfo;
+        if(sort != null){
+            sortInfo = Sort.by(sort);
+        }
+        else{
+            sortInfo = Sort.by("id").descending();
+        }
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sortInfo);
 
         Page<MissionUser> missionUsers =
-        missionUserRepository.findByMemberAndIsCompleted(member, isCompleted, pageable);
+                missionUserRepository.findByMemberAndIsCompleted(member, isCompleted, pageRequest);
 
-        return missionUsers.map(missionUser ->
-                MissionConverter.toGetInfo(missionUser.getMission(), missionUser.getIsCompleted()));
+
+        return MissionConverter.toPagination(
+                missionUsers.map(missionUser -> MissionConverter.toGetMyMissions(
+                        missionUser.getMission(),
+                        missionUser.getIsCompleted()
+                        )).toList(),
+                missionUsers.getNumber(),
+                missionUsers.getSize()
+        );
     }
 
 }

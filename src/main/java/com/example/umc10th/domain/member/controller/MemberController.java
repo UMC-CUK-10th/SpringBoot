@@ -30,9 +30,9 @@ public class MemberController {
     }
 
     // 마이 페이지
-    @GetMapping("/users/mypages")
+    @GetMapping("/users/myPages")
     public APIResponse<MemberResponseDTO.MyPage> getMyPage(
-            @RequestBody MemberRequestDTO.GetInfo dto
+            @RequestBody MemberRequestDTO.MyPage dto
     ){
         MemberResponseDTO.MyPage resDTO = memberService.getMyPage(dto);
 
@@ -41,17 +41,17 @@ public class MemberController {
     }
 
     // 홈 화면
-    @GetMapping("/users")
-    public APIResponse<MemberResponseDTO.Home> getHome(
-            @RequestBody MemberRequestDTO.GetInfo dto,
-            @RequestParam Long localId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ){
-        MemberResponseDTO.Home resDTO = memberService.getHome(dto, localId, page, size);
-
-        BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code, resDTO);
-    }
+//    @GetMapping("/users")
+//    public APIResponse<MemberResponseDTO.Home> getHome(
+//            @RequestBody MemberRequestDTO.Home dto,
+//            @RequestParam Long localId,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ){
+//        MemberResponseDTO.Home resDTO = memberService.getHome(dto, localId, page, size);
+//
+//        BaseSuccessCode code = MemberSuccessCode.OK;
+//        return APIResponse.onSuccess(code, resDTO);
+//    }
 
 }

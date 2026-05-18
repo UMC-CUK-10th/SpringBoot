@@ -46,7 +46,7 @@ public class MemberService {
 
     // 마이 페이지
     public MemberResponseDTO.MyPage getMyPage (
-            MemberRequestDTO.GetInfo dto
+            MemberRequestDTO.MyPage dto
     ){
         Member member = memberRepository.findById(dto.id())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
@@ -55,25 +55,25 @@ public class MemberService {
     }
 
     // 홈 화면
-    public MemberResponseDTO.Home getHome(
-            MemberRequestDTO.GetInfo dto,
-            Long localId,
-            int page,
-            int size
-    ) {
-        Member member = memberRepository.findById(dto.id())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-
-        Local local = localRepository.findById(localId)
-                        .orElseThrow();
-
-        Pageable pageable = PageRequest.of(page, size);
-
-        Page<Mission> missions = missionRepository.findByLocal(local, pageable);
-
-        Page<MissionResponseDTO.GetInfo> missionDTOs = missions.map(mission ->
-                MissionConverter.toGetInfo(mission,null));
-
-        return MemberConverter.toHome(member,missionDTOs);
-    }
+//    public MemberResponseDTO.Home getHome(
+//            MemberRequestDTO.Home dto,
+//            Long localId,
+//            int page,
+//            int size
+//    ) {
+//        Member member = memberRepository.findById(dto.id())
+//                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+//
+//        Local local = localRepository.findById(localId)
+//                        .orElseThrow();
+//
+//        Pageable pageable = PageRequest.of(page, size);
+//
+//        Page<Mission> missions = missionRepository.findByLocal(local, pageable);
+//
+//        Page<MissionResponseDTO.Ho> missionDTOs = missions.map(mission ->
+//                MissionConverter.toGetInfo(mission,null));
+//
+//        return MemberConverter.toHome(member,missionDTOs);
+//    }
 }

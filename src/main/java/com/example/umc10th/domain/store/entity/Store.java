@@ -1,7 +1,7 @@
 package com.example.umc10th.domain.store.entity;
 
+import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.review.entity.Review;
-import com.example.umc10th.domain.store.entity.mapping.StoreMission;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +34,5 @@ public class Store {
     private List<Review> reviewList = new ArrayList<>();
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE)
-    private List<StoreMission> storeMissionList = new ArrayList<>();
+    private List<Mission> missionList = new ArrayList<>();
 }

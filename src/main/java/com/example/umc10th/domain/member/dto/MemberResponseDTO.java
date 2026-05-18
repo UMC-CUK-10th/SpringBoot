@@ -10,11 +10,9 @@ import java.util.List;
 
 public class MemberResponseDTO {
 
-
     // 내 정보 조회
     @Builder
     public record GetInfo(
-
             String username,
             String name,
             Gender gender,
@@ -36,17 +34,17 @@ public class MemberResponseDTO {
     ){}
 
     // 홈 화면
-    @Builder
-    public record Home(
-
-      Integer totalPoints,
-      List<MissionResponseDTO.GetInfo> missions,
-      Integer totalPage,
-      Long totalElements,
-      Boolean isFirst,
-      Boolean isLast
-
-    ){}
+//    @Builder
+//    public record Home(
+//
+//      Integer totalPoints,
+//      List<MissionResponseDTO.GetInfo> missions,
+//      Integer totalPage,
+//      Long totalElements,
+//      Boolean isFirst,
+//      Boolean isLast
+//
+//    ){}
 
 
 }

@@ -2,7 +2,7 @@ package com.example.umc10th.domain.mission.entity;
 
 import com.example.umc10th.domain.mission.entity.mapping.MissionUser;
 import com.example.umc10th.domain.store.entity.Local;
-import com.example.umc10th.domain.store.entity.mapping.StoreMission;
+import com.example.umc10th.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,10 +38,11 @@ public class Mission {
     @JoinColumn(name = "local_id")
     private Local local;
 
-    @OneToMany(mappedBy = "mission", cascade = CascadeType.REMOVE)
-    private List<MissionUser> missionUserList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.REMOVE)
-    private List<StoreMission> storeMissionList = new ArrayList<>();
+    private List<MissionUser> missionUserList = new ArrayList<>();
 
 }

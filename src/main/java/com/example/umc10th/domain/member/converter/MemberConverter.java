@@ -40,18 +40,18 @@ public class MemberConverter {
     }
 
     // 홈 화면
-    public static MemberResponseDTO.Home toHome(
-            Member member,
-            Page<MissionResponseDTO.GetInfo> missions
-    ){
-        return MemberResponseDTO.Home.builder()
-                .totalPoints(member.getTotalPoints())
-                .missions(missions.getContent())
-                .totalPage(missions.getTotalPages())
-                .totalElements(missions.getTotalElements())
-                .isFirst(missions.isFirst())
-                .isLast(missions.isLast())
-                .build();
-    }
+//    public static MemberResponseDTO.Home toHome(
+//            Member member,
+//            Page<MissionResponseDTO.GetInfo> missions
+//    ){
+//        return MemberResponseDTO.Home.builder()
+//                .totalPoints(member.getTotalPoints())
+//                .missions(missions.getContent())
+//                .totalPage(missions.getTotalPages())
+//                .totalElements(missions.getTotalElements())
+//                .isFirst(missions.isFirst())
+//                .isLast(missions.isLast())
+//                .build();
+//    }
 
 }
