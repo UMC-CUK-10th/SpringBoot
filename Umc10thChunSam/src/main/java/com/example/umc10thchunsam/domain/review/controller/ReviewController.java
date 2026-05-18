@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //wsl2
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
@@ -52,6 +51,7 @@ public class ReviewController {
 
 
 
+    //필수 2번 미션.
     @Operation(
             summary = "내가 가진 리뷰들을 페이지 단위로 가져오기",
             description = "페이지네이션으로 제공합니다."

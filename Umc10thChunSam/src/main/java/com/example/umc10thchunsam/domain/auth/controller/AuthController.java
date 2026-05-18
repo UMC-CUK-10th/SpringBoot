@@ -52,6 +52,7 @@ public class AuthController {
 
     }
 
+    //@vaild를 RequestBody가 있는 곳에서 사용. LoginReq안의 어노테이션들 조건을 검증함. 필수 3번 미션.
     @PostMapping("/login")
     public ApiResponse<LoginRes> login(
             @Valid @RequestBody LoginReq request,

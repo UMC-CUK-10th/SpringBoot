@@ -40,18 +40,6 @@ public class ReviewConverter {
     }
 
 
-    public static List<ReviewOfferResponse> toResponses(List<Review> reviews) {
-        return reviews.stream()
-                .map(ReviewConverter::toResponse)
-                .toList();
-    }
-
-    public static ReviewOfferListResponse toListResponse(List<Review> reviews) {
-        return new ReviewOfferListResponse(
-                toResponses(reviews)
-        );
-    }
-
 
 
     public static ReviewPageRes toPageResponse(Page<Review> page) {
