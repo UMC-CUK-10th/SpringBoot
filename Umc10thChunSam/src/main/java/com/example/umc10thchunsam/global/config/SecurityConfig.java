@@ -1,5 +1,7 @@
 package com.example.umc10thchunsam.global.config;
 
+import com.example.umc10thchunsam.domain.auth.CustomAccessDenied;
+import com.example.umc10thchunsam.domain.auth.CustomEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.List;
@@ -23,23 +26,27 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
+    //Spring Security 구현 완료.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {}) // 아래 corsConfigurationSource()랑 연결
-
                 // 🛑 HTML 폼 로그인 / 기본 로그아웃 비활성화
                 .formLogin(form -> form.disable())
                 .logout(logout -> logout.disable())
-
+                .exceptionHandling(exception -> exception
+                                .accessDeniedHandler(customAccessDenied())
+                                .authenticationEntryPoint(customEntryPoint())
+                        )
                 .authorizeHttpRequests(auth -> auth
                         // 1. ✅ 완전 공개 (회원가입/로그인, 문서, 정적 리소스 등)
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/auth/signup",
                                 "/auth/login",
+                                "auth/loginjwt",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/css/**",
@@ -60,6 +67,8 @@ public class SecurityConfig {
 
                         // 4. 나머지 다 막기 (안 쓰는 이상한 URL 접근 방지용)
                         .anyRequest().authenticated()
+
+
                 );
 
         return http.build();
@@ -68,6 +77,15 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAccessDenied customAccessDenied() {
+        return new CustomAccessDenied();
+    }
+    @Bean
+    public CustomEntryPoint customEntryPoint() {
+        return new CustomEntryPoint();
     }
 
     // 🌐 CORS 설정 (Vercel 프론트 도메인 넣기)

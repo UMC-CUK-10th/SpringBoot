@@ -45,6 +45,7 @@ public class AuthController {
     private final PasswordEncoder encoder;
     private final JwtUtil jwtUtil;
 
+    //회원가입 api 구현 완료.
     @PostMapping("/signup")
     public ApiResponse<SignupRes> signup(@Valid @RequestBody SignupReq request) {
         SignupRes signupRes = authService.signup(request);

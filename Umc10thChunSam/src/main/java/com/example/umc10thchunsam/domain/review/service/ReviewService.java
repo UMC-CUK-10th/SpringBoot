@@ -52,15 +52,23 @@ public class ReviewService {
 
     public ReviewPageRes GetReviewsByMemberId(ReviewGetReq.ReviewGetByMeberIdReq req, int page) {
 
-        int pageIndex = page - 1;
-        PageRequest pageable = PageRequest.of(pageIndex, 10);
-
+        PageRequest pageable = getStartPage(page);
         Page<Review> reviewList = reviewRepository.findByMemberIdWithFetchJoin(req.getMemberId(),pageable);
 
 
         return ReviewConverter.toPageResponse(reviewList);
 
 
+    }
+
+
+
+    //페이지 만들기
+    private PageRequest getStartPage(int page) {
+        final int Limit_Size = 10;
+        int pageIndex = page - 1;
+
+        return PageRequest.of(pageIndex, Limit_Size);
     }
 
 
