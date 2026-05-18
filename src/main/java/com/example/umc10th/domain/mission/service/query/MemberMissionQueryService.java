@@ -6,7 +6,7 @@ import com.example.umc10th.domain.mission.enums.MissionStatus;
 public interface MemberMissionQueryService {
 
     // 미션 목록 조회 API
-    MemberMissionResDTO.MissionListDTO getMissions(Long memberId, Integer page, MissionStatus missionStatus);
+    MemberMissionResDTO.Pagination<MemberMissionResDTO.MemberMissionDTO> getMissions(Long memberId, Integer pageSize, Integer pageNumber, MissionStatus missionStatus);
 
     // 진행 중인 미션 조회 API
     MemberMissionResDTO.InProgressMissionListDTO getInProgressMissions(Long memberId, Integer page);

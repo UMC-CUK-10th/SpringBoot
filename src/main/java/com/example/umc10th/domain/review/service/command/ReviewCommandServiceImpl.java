@@ -10,9 +10,12 @@ import com.example.umc10th.domain.review.converter.ReviewConverter;
 import com.example.umc10th.domain.review.dto.req.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
+import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import com.example.umc10th.global.apiPayload.exception.ProjectException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,5 +42,73 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
         Review saved = reviewRepository.save(ReviewConverter.toEntity(member, restaurant, dto));
 
         return ReviewConverter.toCreateDTO(saved);
+    }
+
+    // 리뷰 조회 API
+    @Override
+    public ReviewResDTO.Pagination<ReviewResDTO.GetReviewDTO> getReviews(
+            Long restaurantId,
+            Integer pageSize,
+            String cursor,
+            String query
+    ) {
+        PageRequest pageRequest = PageRequest.of(0, pageSize);
+        Slice<Review> reviewList;
+
+        if (!cursor.equals("-1")) {
+            String[] cursorSplit = cursor.split(":");
+            switch (query.toLowerCase()) {
+                case "id":
+                    Long idCursor = Long.parseLong(cursorSplit[1]);
+                    reviewList = reviewRepository.findReviewByRestaurant_IdAndIdLessThanOrderByIdDesc(
+                            restaurantId,
+                            idCursor,
+                            pageRequest
+                    );
+                    break;
+                case "score":
+                case "grade":
+                    Integer gradeCursor = Integer.parseInt(cursorSplit[0]);
+                    Long reviewIdCursor = Long.parseLong(cursorSplit[1]);
+                    reviewList = reviewRepository.findReviewsByGradeCursor(
+                            restaurantId,
+                            gradeCursor,
+                            reviewIdCursor,
+                            pageRequest
+                    );
+                    break;
+                default:
+                    throw new ProjectException(ReviewErrorCode.QUERY_NOT_VALID);
+            }
+        } else {
+            switch (query.toLowerCase()) {
+                case "id":
+                    reviewList = reviewRepository.findReviewByRestaurant_IdOrderByIdDesc(restaurantId, pageRequest);
+                    break;
+                case "score":
+                case "grade":
+                    reviewList = reviewRepository.findReviewByRestaurant_IdOrderByGradeDescIdDesc(restaurantId, pageRequest);
+                    break;
+                default:
+                    throw new ProjectException(ReviewErrorCode.QUERY_NOT_VALID);
+            }
+        }
+
+        String nextCursor = "-1";
+        if (!reviewList.isEmpty()) {
+            Review lastReview = reviewList.getContent().get(reviewList.getContent().size() - 1);
+            nextCursor = switch (query.toLowerCase()) {
+                case "id" -> lastReview.getId() + ":" + lastReview.getId();
+                case "score", "grade" -> lastReview.getGrade() + ":" + lastReview.getId();
+                default -> throw new ProjectException(ReviewErrorCode.QUERY_NOT_VALID);
+            };
+        }
+
+        return ReviewConverter.toPagination(
+                reviewList.map(ReviewConverter::toGetReviewDTO).toList(),
+                reviewList.hasNext(),
+                nextCursor,
+                reviewList.getSize()
+        );
     }
 }

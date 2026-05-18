@@ -9,12 +9,16 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum MissionSuccessCode implements BaseSuccessCode {
 
-    MISSION_OK(HttpStatus.OK,
+    MISSION_CREATDE_OK(HttpStatus.OK,
             "MISSION200_1",
+            "미션을 성공적으로 생성하였습니다."),
+
+    MISSION_OK(HttpStatus.OK,
+            "MISSION200_2",
             "미션이 성공적으로 조회되었습니다."),
 
     MISSION_COMPLETE_OK(HttpStatus.OK,
-            "MISSION200_2",
+            "MISSION200_3",
             "미션이 성공적으로 완료되었습니다."),
     ;
 

@@ -1,35 +1,36 @@
 package com.example.umc10th.domain.mission.dto.res;
 
 import lombok.Builder;
+import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class MemberMissionResDTO {
 
-    // 미션 목록 조회 DTO
+    // 나의 미션 목록 조회 DTO
     @Builder
-    public record MissionDTO(
+    public record MemberMissionDTO(
             Long memberMissionId,
             Long missionId,
             Long restId,
             String restName,
-            String content,
+            String conditional,
             Long price,
-            Long point,
-            LocalDateTime deadline,
+            int point,
+            LocalDate deadline,
             String status,
             LocalDateTime updatedAt
     ) {}
 
+    // 페이지네이션 틀 (오프셋 기반 페이지네이션)
     @Builder
-    public record MissionListDTO(
-            List<MissionDTO> missionList,
-            Integer listSize,
-            Integer totalPage,
-            Long totalElements,
-            Boolean isFirst,
-            Boolean isLast
+    public record Pagination<T>(
+            List<T> data,
+            Integer pageNumber,
+            Integer pageSize,
+            Sort sort
     ) {}
 
     // 진행 중인 미션 조회 DTO
@@ -39,10 +40,10 @@ public class MemberMissionResDTO {
             Long missionId,
             Long restId,
             String restName,
-            String content,
+            String conditional,
             Long price,
-            Long point,
-            LocalDateTime deadline,
+            int point,
+            LocalDate deadline,
             String status,
             LocalDateTime updatedAt
     ) {}
@@ -64,10 +65,10 @@ public class MemberMissionResDTO {
             Long missionId,
             Long restId,
             String restName,
-            String content,
+            String conditional,
             Long price,
-            Long point,
-            LocalDateTime deadline,
+            int point,
+            LocalDate deadline,
             String status,
             LocalDateTime updatedAt
     ) {}
