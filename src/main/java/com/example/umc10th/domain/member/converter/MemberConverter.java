@@ -6,11 +6,15 @@ import com.example.umc10th.domain.member.entity.Member;
 
 public class MemberConverter {
 
-    public static Member toMember(MemberReqDTO.SignUpDTO request) {
+    public static Member toMember(MemberReqDTO.SignUpDTO request, String encodedPassword) {
         return new Member(
                 request.getEmail(),
-                request.getPassword(),
-                request.getNickname()
+                encodedPassword,
+                request.getNickname(),
+                request.getGender(),
+                request.getBirth(),
+                request.getAddress(),
+                request.getDetailAddress()
         );
     }
 

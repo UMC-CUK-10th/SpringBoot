@@ -7,21 +7,22 @@ import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
-import com.example.umc10th.global.security.JwtTokenProvider;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public MemberController(MemberService memberService, JwtTokenProvider jwtTokenProvider) {
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/Auth")
@@ -50,10 +51,9 @@ public class MemberController {
 
     @GetMapping("/mypage")
     public ApiResponse<MemberResDTO.MyPageResponseDTO> getMyPage(
-            @Parameter(hidden = true)
-            @RequestHeader("Authorization") String authorizationHeader
+            Authentication authentication
     ) {
-        Long memberId = jwtTokenProvider.getMemberIdFromAuthorizationHeader(authorizationHeader);
+        Long memberId = (Long) authentication.getPrincipal();
 
         MemberResDTO.MyPageResponseDTO response = memberService.getMyPage(memberId);
 

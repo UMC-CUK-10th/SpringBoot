@@ -16,10 +16,11 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    // 로그인/JWT 발급용
+    // 로그인/JWT 발급용 이메일
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
+    // BCrypt로 암호화된 비밀번호 저장
     @Column(nullable = false, length = 255)
     private String password;
 
@@ -60,10 +61,33 @@ public class Member {
         this.point = 0;
     }
 
+    public Member(
+            String email,
+            String password,
+            String name,
+            Gender gender,
+            LocalDate birth,
+            Address address,
+            String detailAddress
+    ) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.birth = birth;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.point = 0;
+    }
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+
+        if (this.point == null) {
+            this.point = 0;
+        }
     }
 
     @PreUpdate
@@ -105,5 +129,17 @@ public class Member {
 
     public Integer getPoint() {
         return point;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

@@ -18,5 +18,5 @@ spring:
       hibernate:
         format_sql: true # 출력되는 SQL 쿼리를 보기 좋게 포맷팅
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:abcdefghijklmnopqrstuvwxyz1234567890abcdef}
   access-token-validity-in-ms: 3600000
