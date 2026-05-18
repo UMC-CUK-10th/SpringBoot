@@ -17,7 +17,7 @@ public class ReviewResDTO {
         Long storeId;
         String storeName;
     }
-    
+
     @Builder
     @Getter
     @NoArgsConstructor
@@ -25,6 +25,9 @@ public class ReviewResDTO {
     public static class MyReviewListDTO {
         List<MyReviewViewDTO> reviewList;
         Integer listSize;
+        Long lastId;           // 다음에 요청할 때 사용할 커서 (ID)
+        Float lastRating;      // 다음에 요청할 때 사용할 커서 (별점)
+        Boolean isLast;        // 마지막 페이지 여부
     }
 
     @Builder

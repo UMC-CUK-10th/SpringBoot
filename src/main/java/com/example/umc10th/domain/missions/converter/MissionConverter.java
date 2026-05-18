@@ -1,24 +1,15 @@
 package com.example.umc10th.domain.missions.converter;
 
 import com.example.umc10th.domain.missions.dto.MissionResDTO;
+import com.example.umc10th.domain.missions.entity.Missions;
 import com.example.umc10th.domain.missions.entity.mapping.MemberMissions;
+import org.springdoc.core.converters.models.Sort;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MissionConverter {
-
-    // 개별 미션 엔티티를 DTO로 변환
-    public static MissionResDTO.MissionViewDTO toMissionViewDTO(MemberMissions memberMission) {
-        return MissionResDTO.MissionViewDTO.builder()
-                .missionId(memberMission.getMissions().getMissionId())
-                .content(memberMission.getMissions().getContent())
-                .rewardPoint(memberMission.getMissions().getRewardPoint())
-                .isCompleted(memberMission.getIsCompleted())
-                .build();
-    }
-
     // 페이징된 미션 리스트 엔티티를 ListDTO로 변환
     public static MissionResDTO.MissionListDTO toMissionListDTO(Page<MemberMissions> missionPage) {
 
@@ -35,4 +26,27 @@ public class MissionConverter {
                 .missionList(missionViewDTOList)
                 .build();
     }
+
+    public static MissionResDTO.MissionViewDTO toMissionViewDTO(MemberMissions memberMission) {
+        return MissionResDTO.MissionViewDTO.builder()
+                .missionId(memberMission.getMissions().getMissionId())
+                .content(memberMission.getMissions().getContent())
+                .rewardPoint(memberMission.getMissions().getRewardPoint())
+                .isCompleted(memberMission.getIsCompleted())
+                .build();
+    }
+
+    // 페이지네이션 툴 생성
+    public static <T> MissionResDTO.Pagination<T> toPagination(
+            List<T> data,
+            Integer pageNumber,
+            Integer pageSize
+    ){
+        return MissionResDTO.Pagination.<T>builder()
+                .data(data)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .build();
+    }
+
 }
