@@ -1,11 +1,19 @@
 package com.example.umc10th.domain.member.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class MemberReqDTO {
+
+    // 회원가입 요청 DTO
+    public record SignUpRequest(
+            @Email @NotBlank String email,
+            @NotBlank String password
+    ) {}
 
     /* ───────────────────────────────────────────
        과제 1: 진행중인 미션 조회 (오프셋 페이지네이션)
@@ -40,7 +48,7 @@ public class MemberReqDTO {
         @Min(value = 1, message = "별점은 1 이상이어야 합니다.")
         private Float score;
 
-        @NotNull(message = "리뷰 본문은 필수입니다.")
+        @NotBlank(message = "리뷰 본문은 필수입니다.")
         private String body;
     }
 }

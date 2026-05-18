@@ -10,6 +10,9 @@ import java.util.List;
 
 public class MemberResDTO {
 
+    // 회원가입 응답 DTO
+    public record SignUpResponse(Long memberId, String email) {}
+
     /* ───────────────────────────────────────────
        과제 1: 진행중인 미션 응답 (오프셋 페이지네이션)
     ─────────────────────────────────────────── */
