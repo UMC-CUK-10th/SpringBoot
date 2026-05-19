@@ -5,7 +5,7 @@ import com.example.springboot.domain.users.entity.Users;
 
 public class UsersConverter {
 
-    // 마이페이지
+    // 마이페이지 정보 변환
     public static UsersResDTO.GetInfo toGetInfo(Users users) {
         return UsersResDTO.GetInfo.builder()
                 .email(users.getEmail())

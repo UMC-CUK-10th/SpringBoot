@@ -26,7 +26,7 @@ public class UsersResDTO {
             List<MissionResDTO.MissionDetailDTO> missions
     ) {}
 
-    // 5. 회원가입 결과
+    // 5. 회원가입 결과 (JoinResultDTO)
     @Builder
     public record JoinResultDTO(
             Long user_id,

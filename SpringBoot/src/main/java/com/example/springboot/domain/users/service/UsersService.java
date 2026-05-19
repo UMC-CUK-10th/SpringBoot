@@ -37,6 +37,7 @@ public class UsersService {
     private final com.example.springboot.domain.review.repository.ReviewRepository reviewRepository;
 
     public UsersResDTO.GetInfo getMyInfo(Long userId) {
+        // 마이페이지 정보 조회
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
         return UsersConverter.toGetInfo(users);
