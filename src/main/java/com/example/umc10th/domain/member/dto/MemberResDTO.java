@@ -18,7 +18,7 @@ public class MemberResDTO {
 
     // 회원가입 API
     @Builder
-    public record SingUpDTO(
+    public record SignUpDTO(
             Long memberId,
             LocalDateTime createAt
     ){}

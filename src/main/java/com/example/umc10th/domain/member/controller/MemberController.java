@@ -29,10 +29,10 @@ public class MemberController {
 
     // 회원가입 API
     @PostMapping("/auth/sign-up")
-    public ApiResponse<MemberResDTO.SingUpDTO> signUp(
+    public ApiResponse<MemberResDTO.SignUpDTO> signUp(
             @RequestBody @Valid MemberReqDTO.SignUpDTO dto
     ){
-        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_SIGNUP_OK, null);
+        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_SIGNUP_OK, memberService.signUp(dto));
     }
 
     // 로그인 API
