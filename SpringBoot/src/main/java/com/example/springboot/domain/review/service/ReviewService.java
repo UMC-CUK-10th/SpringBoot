@@ -8,6 +8,8 @@ import com.example.springboot.domain.review.dto.ReviewResDTO;
 import com.example.springboot.domain.review.entity.Review;
 import com.example.springboot.domain.review.repository.ReviewRepository;
 import com.example.springboot.domain.users.entity.Users;
+import com.example.springboot.domain.users.exception.UsersErrorCode;
+import com.example.springboot.domain.users.exception.UsersException;
 import com.example.springboot.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,12 @@ public class ReviewService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public ReviewResDTO.WriteResultDTO writeReview(Long missionId, ReviewReqDTO.WriteDTO request) {
+    public ReviewResDTO.WriteResultDTO writeReview(Long missionId, Long userId, ReviewReqDTO.WriteDTO request) {
         Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new RuntimeException("Mission not found"));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.MISSION_NOT_FOUND));
 
-        // 임시로 1번 유저 사용
-        Users user = usersRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
 
         Review review = Review.builder()
                 .users(user)

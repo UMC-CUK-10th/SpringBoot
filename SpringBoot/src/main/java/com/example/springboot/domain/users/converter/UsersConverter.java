@@ -28,5 +28,12 @@ public class UsersConverter {
                 .listSize(missionList.size())
                 .missionList(missionList)
                 .build();
+     }
+
+    public static UsersResDTO.JoinResultDTO toJoinResultDTO(Users users) {
+        return UsersResDTO.JoinResultDTO.builder()
+                .user_id(users.getId())
+                .created_at(users.getUserCreatedAt())
+                .build();
     }
 }
