@@ -35,6 +35,8 @@ dependencies {
     // MySQL (나중에 쓸 거면 유지)
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -4,17 +4,17 @@ import com.example.umc10th.domain.user.dto.UserReqDTO;
 import com.example.umc10th.domain.user.dto.UserResDTO;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import com.example.umc10th.domain.user.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
+
+    private final UserService userService;
 
     // 내 정보 조회
     @GetMapping("/me")
@@ -70,6 +70,7 @@ public class UserController {
     public ApiResponse<String> signUp(
             @RequestBody UserReqDTO.SignUp request
     ) {
+        userService.signup(request);
         return ApiResponse.onSuccess(GeneralSuccessCode.OK, "회원가입 완료");
     }
 }
