@@ -4,6 +4,7 @@ import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.mission.repository.StoreRepository;
+import com.example.umc10th.domain.review.converter.ReviewConverter;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
@@ -35,12 +36,7 @@ public class ReviewService {
         Store store = storeRepository.findById(request.getStoreId())
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
-        Review review = Review.builder()
-                .member(member)
-                .store(store)
-                .content(request.getContent())
-                .star(request.getStar())
-                .build();
+        Review review = ReviewConverter.toReview(request, member, store);
 
         return reviewRepository.save(review).getId();
     }
@@ -63,13 +59,7 @@ public class ReviewService {
         }
 
         List<ReviewResDTO.MyReviewListDTO> dtoList = reviews.stream()
-                .map(r -> ReviewResDTO.MyReviewListDTO.builder()
-                        .reviewId(r.getId())
-                        .storeName(r.getStore().getName())
-                        .content(r.getContent())
-                        .star(r.getStar())
-                        .createdAt(r.getCreatedAt())
-                        .build())
+                .map(ReviewConverter::toMyReviewListDTO)
                 .collect(Collectors.toList());
 
         Long nextCursorId = null;
@@ -84,4 +74,4 @@ public class ReviewService {
 
         return new ReviewResDTO.CursorResult<>(dtoList, nextCursorId, nextCursorStar, hasNext);
     }
-}
+}

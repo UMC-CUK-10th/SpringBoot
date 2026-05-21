@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 public class MemberResDTO {
 
     @Builder
@@ -17,4 +19,15 @@ public class MemberResDTO {
         private String phoneNumber;
         private Integer point;
     }
-}
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JoinResultDTO {
+        private Long memberId;
+        private String name;
+        private String email;
+        private LocalDateTime createdAt;
+    }
+}

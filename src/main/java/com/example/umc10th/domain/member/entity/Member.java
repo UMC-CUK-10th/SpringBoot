@@ -1,5 +1,7 @@
 package com.example.umc10th.domain.member.entity;
 
+import com.example.umc10th.domain.member.entity.mapping.MemberFood;
+import com.example.umc10th.domain.member.entity.mapping.MemberTerm;
 import com.example.umc10th.domain.member.enums.Gender;
 import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.global.common.BaseEntity;
@@ -8,6 +10,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,6 +47,7 @@ public class Member extends BaseEntity {
     private SocialType socialType;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer point = 0;
 
     @Column(nullable = false, length = 50)
@@ -51,5 +56,17 @@ public class Member extends BaseEntity {
     @Column(length = 15)
     private String phoneNumber;
 
+    // BCrypt 암호화된 비밀번호
+    @Column(length = 255)
+    private String password;
+
     private LocalDateTime deletedAt;
-}
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<MemberFood> memberFoods = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<MemberTerm> memberTerms = new ArrayList<>();
+}
