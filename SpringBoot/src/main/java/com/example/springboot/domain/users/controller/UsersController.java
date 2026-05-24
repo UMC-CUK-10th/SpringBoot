@@ -1,16 +1,21 @@
 package com.example.springboot.domain.users.controller;
 
 import com.example.springboot.domain.mission.dto.MissionResDTO;
+import com.example.springboot.domain.users.converter.UsersConverter;
 import com.example.springboot.domain.users.dto.UsersReqDTO;
 import com.example.springboot.domain.users.dto.UsersResDTO;
+import com.example.springboot.domain.users.entity.Users;
 import com.example.springboot.domain.users.entity.enums.UserMissionStatus;
 import com.example.springboot.domain.users.exception.UsersSuccessCode;
 import com.example.springboot.domain.users.service.UsersService;
 import com.example.springboot.global.apiPayload.ApiResponse;
+import com.example.springboot.global.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,11 +36,11 @@ public class UsersController {
             @Parameter(name = "size", description = "페이지 크기")
     })
     public ApiResponse<UsersResDTO.HomeResDTO> getHome(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam(name = "region") Long regionId,
             @RequestParam(name = "page", defaultValue = "0") Integer page
     ) {
-        // 임시로 1번 유저 사용
-        UsersResDTO.HomeResDTO result = usersService.getHome(1L, regionId, page);
+        UsersResDTO.HomeResDTO result = usersService.getHome(customUserDetails.getUsers().getId(), regionId, page);
         return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
     
@@ -47,11 +52,11 @@ public class UsersController {
             @Parameter(name = "page", description = "페이지 번호 (0부터 시작)")
     })
     public ApiResponse<List<MissionResDTO.UserMissionListDTO>> getMyMissions(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam(name = "status") UserMissionStatus status,
             @RequestParam(name = "page", defaultValue = "0") Integer page
     ) {
-        // 임시로 1번 유저 사용
-        List<MissionResDTO.UserMissionListDTO> result = usersService.getMyMissions(1L, status, page);
+        List<MissionResDTO.UserMissionListDTO> result = usersService.getMyMissions(customUserDetails.getUsers().getId(), status, page);
         return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
 
@@ -64,15 +69,19 @@ public class UsersController {
         // Service 호출 생략
         return ApiResponse.onSuccess(UsersSuccessCode.OK, null);
     }
-
     // 5. 회원가입
-    @PostMapping("/users")
+    @PostMapping("/users/signup")
     @Operation(summary = "회원가입 API", description = "새로운 사용자를 등록합니다.")
     public ApiResponse<UsersResDTO.JoinResultDTO> join(
-            @jakarta.validation.Valid @RequestBody UsersReqDTO.JoinDTO request
+            @Valid @RequestBody UsersReqDTO.JoinDTO request
     ) {
-        // Service 호출 생략
-        return ApiResponse.onSuccess(UsersSuccessCode.OK, null);
+
+        Users user = usersService.signup(request);
+
+        return ApiResponse.onSuccess(
+                    UsersSuccessCode.OK,
+                    UsersConverter.toJoinResultDTO(user)
+        );
     }
 
     // 내가 진행중인 미션 조회 (오프셋 기반)
@@ -109,9 +118,10 @@ public class UsersController {
     // 4. 마이페이지 (프로필 정보)
     @GetMapping("/users/me")
     @Operation(summary = "마이페이지 조회 API", description = "사용자의 프로필 정보를 조회합니다.")
-    public ApiResponse<UsersResDTO.GetInfo> getMyInfo() {
-        // 임시로 1번 유저 사용
-        UsersResDTO.GetInfo result = usersService.getMyInfo(1L);
+    public ApiResponse<UsersResDTO.GetInfo> getMyInfo(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        UsersResDTO.GetInfo result = usersService.getMyInfo(customUserDetails.getUsers().getId());
         return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
 }

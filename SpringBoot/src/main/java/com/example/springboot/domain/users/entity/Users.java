@@ -40,13 +40,13 @@ public class Users {
     @Column(name = "user_phone_number", length = 15)
     private String userPhoneNumber;
 
-    @Column(name = "email", length = 15)
+    @Column(name = "email", length = 50, unique = true)
     private String email;
 
     @Column(name = "user_point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private Long userPoint;
 
-    @Column(name = "user_password", nullable = false, length = 15)
+    @Column(name = "user_password", nullable = false, length = 100)
     private String userPassword;
 
     @CreatedDate

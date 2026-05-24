@@ -6,12 +6,14 @@ import com.example.springboot.domain.mission.entity.Mission;
 import com.example.springboot.domain.mission.repository.MissionRepository;
 import com.example.springboot.domain.region.entity.Region;
 import com.example.springboot.domain.region.repository.RegionRepository;
+import com.example.springboot.domain.review.repository.ReviewRepository;
 import com.example.springboot.domain.users.converter.UsersConverter;
 import com.example.springboot.domain.users.dto.UsersReqDTO;
 import com.example.springboot.domain.users.dto.UsersResDTO;
 import com.example.springboot.domain.users.entity.UserMission;
 import com.example.springboot.domain.users.entity.Users;
 import com.example.springboot.domain.users.entity.enums.UserMissionStatus;
+import com.example.springboot.domain.users.entity.enums.UserStatus;
 import com.example.springboot.domain.users.exception.UsersErrorCode;
 import com.example.springboot.domain.users.exception.UsersException;
 import com.example.springboot.domain.users.repository.UserMissionRepository;
@@ -19,7 +21,7 @@ import com.example.springboot.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,10 +36,34 @@ public class UsersService {
     private final UserMissionRepository userMissionRepository;
     private final MissionRepository missionRepository;
     private final RegionRepository regionRepository;
-    private final com.example.springboot.domain.review.repository.ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    // 회원가입
+    @Transactional
+    public Users signup(UsersReqDTO.JoinDTO request) {
+
+        if (usersRepository.findByEmail(request.email()).isPresent()) {
+            throw new UsersException(UsersErrorCode.DUPLICATE_EMAIL);
+        }
+
+        Users users = Users.builder()
+                .email(request.email())
+                .userPassword(
+                        passwordEncoder.encode(request.userPassword())
+                )
+                .name(request.userName())
+                .nickname(request.nickname())
+                .userPhoneNumber(request.userPhoneNumber())
+                .userStatus(UserStatus.ACTIVE)
+                .userPoint(0L)
+                .build();
+
+        return usersRepository.save(users);
+    }
+
+    // 마이페이지 정보 조회
     public UsersResDTO.GetInfo getMyInfo(Long userId) {
-        // 마이페이지 정보 조회
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
         return UsersConverter.toGetInfo(users);
@@ -84,7 +110,7 @@ public class UsersService {
                 .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
         
         Region region = regionRepository.findById(regionId)
-                .orElseThrow(() -> new RuntimeException("Region not found"));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.REGION_NOT_FOUND));
 
         Page<Mission> missions = missionRepository.findAvailableMissionsByRegion(regionId, PageRequest.of(page, 10));
 

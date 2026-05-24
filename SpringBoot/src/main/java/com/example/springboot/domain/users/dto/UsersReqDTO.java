@@ -1,5 +1,8 @@
 package com.example.springboot.domain.users.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class UsersReqDTO {
 
     // 마이페이지 (이전 기능 유지)
@@ -9,16 +12,21 @@ public class UsersReqDTO {
 
     // 5. 회원가입 (Validation 적용)
     public record JoinDTO(
-            @jakarta.validation.constraints.NotBlank
-            String user_name,
-            @jakarta.validation.constraints.NotBlank
+
+            @NotBlank
+            String userName,
+
+            @NotBlank
             String nickname,
-            @jakarta.validation.constraints.NotBlank
-            String user_phone_number,
-            @jakarta.validation.constraints.Email
+
+            @NotBlank
+            String userPhoneNumber,
+
+            @Email
             String email,
-            @jakarta.validation.constraints.NotBlank
-            String user_password
+
+            @NotBlank
+            String userPassword
     ) {}
 
     // 진행 중인 미션 조회
