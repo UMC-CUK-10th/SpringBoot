@@ -55,7 +55,7 @@ public class UsersService {
                 .userPassword(
                         passwordEncoder.encode(request.userPassword())
                 )
-                .name(request.userName())
+                .username(request.userName())
                 .nickname(request.nickname())
                 .userPhoneNumber(request.userPhoneNumber())
                 .userStatus(UserStatus.ACTIVE)
@@ -69,7 +69,7 @@ public class UsersService {
     @Transactional
     public UsersResDTO.LoginResultDTO login(UsersReqDTO.LoginDTO request) {
         Users users = usersRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.userPassword(), users.getUserPassword())) {
             throw new UsersException(UsersErrorCode.INVALID_PASSWORD);
@@ -88,7 +88,7 @@ public class UsersService {
 
     public List<MissionResDTO.UserMissionListDTO> getMyMissions(Long userId, UserMissionStatus status, Integer page) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         Page<UserMission> userMissions = userMissionRepository.findByUsersAndUserMissionStatus(user, status, PageRequest.of(page, 10));
         return MissionConverter.toUserMissionListDTOList(userMissions);
@@ -96,7 +96,7 @@ public class UsersService {
 
     public UsersResDTO.OngoingMissionListDTO getOngoingMissions(UsersReqDTO.OngoingMissionReqDTO request) {
         Users user = usersRepository.findById(request.userId())
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         Integer page = (request.page() == null) ? 0 : request.page();
         Page<UserMission> userMissions = userMissionRepository.findByUsersAndUserMissionStatus(
@@ -107,7 +107,7 @@ public class UsersService {
 
     public UsersResDTO.ReviewListDTO getMyReviews(Long userId, String sortBy, Long lastId, Integer lastFavorite, Integer size) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         int pageSize = (size == null) ? 10 : size;
         org.springframework.data.domain.Slice<com.example.springboot.domain.review.entity.Review> reviews;
@@ -124,7 +124,7 @@ public class UsersService {
 
     public UsersResDTO.HomeResDTO getHome(Long userId, Long regionId, Integer page) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
         
         Region region = regionRepository.findById(regionId)
                 .orElseThrow(() -> new UsersException(UsersErrorCode.REGION_NOT_FOUND));

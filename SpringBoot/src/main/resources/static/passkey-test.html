@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Passkey Test</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f6f7f9;
+      color: #20242a;
+    }
+
+    main {
+      width: min(920px, calc(100% - 32px));
+      margin: 40px auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    section {
+      background: #ffffff;
+      border: 1px solid #d9dee7;
+      border-radius: 8px;
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+    }
+
+    h1, h2, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 650;
+    }
+
+    input, button, textarea {
+      font: inherit;
+      border-radius: 6px;
+    }
+
+    input, textarea {
+      border: 1px solid #c9d0dc;
+      padding: 10px 12px;
+      background: #fff;
+      color: #20242a;
+    }
+
+    button {
+      border: 0;
+      background: #1769e0;
+      color: #fff;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #2f3744;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #111418;
+        color: #f1f4f8;
+      }
+
+      section {
+        background: #191e25;
+        border-color: #303845;
+      }
+
+      input, textarea {
+        background: #111418;
+        color: #f1f4f8;
+        border-color: #3a4453;
+      }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Passkey Test</h1>
+    <p>Password login gets a JWT, registration uses that JWT, then passkey login returns a fresh JWT.</p>
+  </header>
+
+  <section>
+    <h2>1. Password Login</h2>
+    <label>Email <input id="email" autocomplete="username" placeholder="user@example.com"></label>
+    <label>Password <input id="password" type="password" autocomplete="current-password"></label>
+    <div class="row">
+      <button id="passwordLogin">Login</button>
+      <button id="clearToken" class="secondary">Clear Token</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Register Passkey</h2>
+    <label>Passkey Label <input id="label" autocomplete="off" value="local test passkey"></label>
+    <button id="registerPasskey">Register Passkey</button>
+  </section>
+
+  <section>
+    <h2>3. Login With Passkey</h2>
+    <button id="loginPasskey">Login With Passkey</button>
+  </section>
+
+  <section>
+    <h2>Result</h2>
+    <textarea id="result" readonly></textarea>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const tokenKey = "passkeyTestAccessToken";
+
+  function log(value) {
+    $("result").value = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+  }
+
+  function base64UrlEncode(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for (const byte of bytes) {
+      binary += String.fromCharCode(byte);
+    }
+    return btoa(binary).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+  }
+
+  function base64UrlDecode(value) {
+    const base64 = value.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+    const binary = atob(padded);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  function authHeaders() {
+    const token = localStorage.getItem(tokenKey);
+    return token ? {Authorization: `Bearer ${token}`} : {};
+  }
+
+  async function postJson(url, body, headers = {}) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {"Content-Type": "application/json", ...headers},
+      body: body ? JSON.stringify(body) : undefined
+    });
+    const text = await response.text();
+    const json = text ? JSON.parse(text) : {};
+    if (!response.ok) {
+      throw new Error(`${response.status} ${JSON.stringify(json)}`);
+    }
+    return json;
+  }
+
+  $("passwordLogin").addEventListener("click", async () => {
+    try {
+      const json = await postJson("/auth/login", {
+        email: $("email").value,
+        userPassword: $("password").value
+      });
+      const token = json.result?.accessToken || json.accessToken;
+      if (!token) {
+        throw new Error(`No accessToken in response: ${JSON.stringify(json)}`);
+      }
+      localStorage.setItem(tokenKey, token);
+      log(json);
+    } catch (error) {
+      log(error.message);
+    }
+  });
+
+  $("clearToken").addEventListener("click", () => {
+    localStorage.removeItem(tokenKey);
+    log("Token cleared.");
+  });
+
+  $("registerPasskey").addEventListener("click", async () => {
+    try {
+      const options = await postJson("/webauthn/register/options", null, authHeaders());
+      options.challenge = base64UrlDecode(options.challenge);
+      options.user.id = base64UrlDecode(options.user.id);
+      options.excludeCredentials = (options.excludeCredentials || []).map((credential) => ({
+        ...credential,
+        id: base64UrlDecode(credential.id)
+      }));
+
+      const created = await navigator.credentials.create({publicKey: options});
+      const registration = {
+        publicKey: {
+          credential: {
+            id: created.id,
+            rawId: base64UrlEncode(created.rawId),
+            response: {
+              attestationObject: base64UrlEncode(created.response.attestationObject),
+              clientDataJSON: base64UrlEncode(created.response.clientDataJSON),
+              transports: created.response.getTransports ? created.response.getTransports() : []
+            },
+            type: created.type,
+            clientExtensionResults: created.getClientExtensionResults(),
+            authenticatorAttachment: created.authenticatorAttachment
+          },
+          label: $("label").value
+        }
+      };
+      log(await postJson("/webauthn/register", registration, authHeaders()));
+    } catch (error) {
+      log(error.message);
+    }
+  });
+
+  $("loginPasskey").addEventListener("click", async () => {
+    try {
+      const options = await postJson("/webauthn/authenticate/options");
+      options.challenge = base64UrlDecode(options.challenge);
+      options.allowCredentials = (options.allowCredentials || []).map((credential) => ({
+        ...credential,
+        id: base64UrlDecode(credential.id)
+      }));
+
+      const credential = await navigator.credentials.get({publicKey: options});
+      const assertion = {
+        id: credential.id,
+        rawId: base64UrlEncode(credential.rawId),
+        response: {
+          authenticatorData: base64UrlEncode(credential.response.authenticatorData),
+          clientDataJSON: base64UrlEncode(credential.response.clientDataJSON),
+          signature: base64UrlEncode(credential.response.signature),
+          userHandle: credential.response.userHandle ? base64UrlEncode(credential.response.userHandle) : null
+        },
+        credType: credential.type,
+        clientExtensionResults: credential.getClientExtensionResults(),
+        authenticatorAttachment: credential.authenticatorAttachment
+      };
+      const json = await postJson("/login/webauthn", assertion);
+      if (json.accessToken) {
+        localStorage.setItem(tokenKey, json.accessToken);
+      }
+      log(json);
+    } catch (error) {
+      log(error.message);
+    }
+  });
+</script>
+</body>
+</html>

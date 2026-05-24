@@ -24,8 +24,8 @@ public class Users {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 15)
-    private String name;
+    @Column(name = "username", nullable = false, length = 15)
+    private String username;
 
     @Column(name = "nickname", nullable = false, length = 15)
     private String nickname;
@@ -40,7 +40,7 @@ public class Users {
     @Column(name = "user_phone_number", length = 15)
     private String userPhoneNumber;
 
-    @Column(name = "email", length = 50, unique = true)
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
     @Column(name = "user_point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")

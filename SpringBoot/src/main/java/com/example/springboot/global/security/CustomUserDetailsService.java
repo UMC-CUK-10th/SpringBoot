@@ -1,6 +1,8 @@
 package com.example.springboot.global.security;
 
 import com.example.springboot.domain.users.entity.Users;
+import com.example.springboot.domain.users.exception.UsersErrorCode;
+import com.example.springboot.domain.users.exception.UsersException;
 import com.example.springboot.domain.users.repository.UsersRepository;
 import com.example.springboot.global.security.entity.AuthUsers;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +15,24 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UsersRepository usersRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email)
+    public UserDetails loadUserByEmail(String email)
             throws UsernameNotFoundException {
 
         Users users = usersRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+                        new UsersException(UsersErrorCode.USERS_NOT_FOUND));
+
+        return new AuthUsers(users);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        Users users = usersRepository.findByEmail(username)
+                .or(() -> usersRepository.findByUsername(username))
+                .orElseThrow(() ->
+                        new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         return new AuthUsers(users);
     }

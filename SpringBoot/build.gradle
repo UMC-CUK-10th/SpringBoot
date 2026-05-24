@@ -48,6 +48,9 @@ dependencies {
 
     // OAuth
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // WebAuthn
+    implementation 'org.springframework.security:spring-security-webauthn'
 }
 
 tasks.named('test') {

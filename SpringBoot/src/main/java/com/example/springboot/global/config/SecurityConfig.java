@@ -8,9 +8,11 @@ import com.example.springboot.global.security.handler.OAuthFailureHandler;
 import com.example.springboot.global.security.handler.OAuthSuccessHandler;
 import com.example.springboot.global.security.service.CustomOAuthService;
 import com.example.springboot.global.security.util.JwtUtil;
+import com.example.springboot.global.security.webauthn.WebAuthnLoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.webauthn.authentication.WebAuthnAuthenticationFilter;
 
 // 스프링 시큐리티
 @EnableWebSecurity
@@ -33,6 +36,7 @@ public class SecurityConfig {
     private final CustomOAuthService customOAuthService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
     private final OAuthFailureHandler oAuthFailureHandler;
+    private final WebAuthnLoginSuccessHandler webAuthnLoginSuccessHandler;
 
     private final String[] allowUris = {
 
@@ -46,6 +50,9 @@ public class SecurityConfig {
 
             // 로그인 허용
             "/auth/**",
+            "/login/webauthn",
+            "/webauthn/authenticate/options",
+            "/passkey-test.html",
 
             // OAuth2 인증 흐름 허용
             "/oauth2/**",
@@ -97,6 +104,22 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
+                // 패스키 활성화
+                .webAuthn(webAuth -> webAuth
+                        .rpId("localhost")
+                        .rpName("UMC 10th")
+                        .allowedOrigins(ALLOWED_ORIGINS)
+                        .disableDefaultRegistrationPage(true)
+                        .addObjectPostProcessor(new ObjectPostProcessor<WebAuthnAuthenticationFilter>() {
+                            @Override
+                            public <O extends WebAuthnAuthenticationFilter> O postProcess(O filter) {
+                                filter.setAuthenticationSuccessHandler(webAuthnLoginSuccessHandler);
+                                return filter;
+                            }
+                        })
+                )
+
+
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(customAccessDenied)
                         .authenticationEntryPoint(customEntryPoint)
@@ -114,4 +137,9 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    private static final String[] ALLOWED_ORIGINS = {
+            "http://localhost:8080"
+    };
+
 }

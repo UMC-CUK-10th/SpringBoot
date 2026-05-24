@@ -48,7 +48,7 @@ public class UsersConverter {
     public static Users toUser(com.example.springboot.global.security.dto.OAuthDTO dto) {
         return Users.builder()
                 .email(dto.getSocialEmail())
-                .name(dto.getName())
+                .username(dto.getName())
                 .nickname(dto.getName())
                 .socialType(dto.getSocialType())
                 .socialUid(dto.getSocialUid())
