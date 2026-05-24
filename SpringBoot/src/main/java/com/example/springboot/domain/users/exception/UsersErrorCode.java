@@ -13,6 +13,8 @@ public enum UsersErrorCode implements BaseErrorCode {
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER400_2", "이미 가입된 이메일입니다."),
     REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION404_1", "존재하지 않는 지역입니다."),
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "MISSION404_1", "존재하지 않는 미션입니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER400_3", "비밀번호가 일치하지 않습니다."),
+    NOT_SUPPORT_SOCIAL_PROVIDER(HttpStatus.BAD_REQUEST, "MEMBER400_4", "지원하지 않는 소셜 로그인 제공자입니다."),
     ;
 
     private final HttpStatus status;

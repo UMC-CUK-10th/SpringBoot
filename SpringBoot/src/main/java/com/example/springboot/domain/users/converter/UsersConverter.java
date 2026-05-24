@@ -36,4 +36,24 @@ public class UsersConverter {
                 .created_at(users.getUserCreatedAt())
                 .build();
     }
+
+    public static UsersResDTO.LoginResultDTO toLoginResultDTO(Users users, String accessToken) {
+        return UsersResDTO.LoginResultDTO.builder()
+                .userId(users.getId())
+                .email(users.getEmail())
+                .accessToken(accessToken)
+                .build();
+    }
+
+    public static Users toUser(com.example.springboot.global.security.dto.OAuthDTO dto) {
+        return Users.builder()
+                .email(dto.getSocialEmail())
+                .name(dto.getName())
+                .nickname(dto.getName())
+                .socialType(dto.getSocialType())
+                .socialUid(dto.getSocialUid())
+                .userStatus(com.example.springboot.domain.users.entity.enums.UserStatus.ACTIVE)
+                .userPoint(0L)
+                .build();
+    }
 }

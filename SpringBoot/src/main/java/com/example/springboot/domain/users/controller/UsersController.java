@@ -9,7 +9,7 @@ import com.example.springboot.domain.users.entity.enums.UserMissionStatus;
 import com.example.springboot.domain.users.exception.UsersSuccessCode;
 import com.example.springboot.domain.users.service.UsersService;
 import com.example.springboot.global.apiPayload.ApiResponse;
-import com.example.springboot.global.security.CustomUserDetails;
+import com.example.springboot.global.security.entity.AuthUsers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -36,11 +36,11 @@ public class UsersController {
             @Parameter(name = "size", description = "페이지 크기")
     })
     public ApiResponse<UsersResDTO.HomeResDTO> getHome(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @AuthenticationPrincipal AuthUsers authUsers,
             @RequestParam(name = "region") Long regionId,
             @RequestParam(name = "page", defaultValue = "0") Integer page
     ) {
-        UsersResDTO.HomeResDTO result = usersService.getHome(customUserDetails.getUsers().getId(), regionId, page);
+        UsersResDTO.HomeResDTO result = usersService.getHome(authUsers.getUsers().getId(), regionId, page);
         return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
     
@@ -52,11 +52,11 @@ public class UsersController {
             @Parameter(name = "page", description = "페이지 번호 (0부터 시작)")
     })
     public ApiResponse<List<MissionResDTO.UserMissionListDTO>> getMyMissions(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @AuthenticationPrincipal AuthUsers authUsers,
             @RequestParam(name = "status") UserMissionStatus status,
             @RequestParam(name = "page", defaultValue = "0") Integer page
     ) {
-        List<MissionResDTO.UserMissionListDTO> result = usersService.getMyMissions(customUserDetails.getUsers().getId(), status, page);
+        List<MissionResDTO.UserMissionListDTO> result = usersService.getMyMissions(authUsers.getUsers().getId(), status, page);
         return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
 
@@ -119,9 +119,9 @@ public class UsersController {
     @GetMapping("/users/me")
     @Operation(summary = "마이페이지 조회 API", description = "사용자의 프로필 정보를 조회합니다.")
     public ApiResponse<UsersResDTO.GetInfo> getMyInfo(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            @AuthenticationPrincipal AuthUsers authUsers
     ) {
-        UsersResDTO.GetInfo result = usersService.getMyInfo(customUserDetails.getUsers().getId());
+        UsersResDTO.GetInfo result = usersService.getMyInfo(authUsers.getUsers());
         return ApiResponse.onSuccess(UsersSuccessCode.OK, result);
     }
 }

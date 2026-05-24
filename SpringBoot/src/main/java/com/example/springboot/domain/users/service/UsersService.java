@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.springboot.global.security.entity.AuthUsers;
+import com.example.springboot.global.security.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,7 @@ public class UsersService {
     private final RegionRepository regionRepository;
     private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     // 회원가입
     @Transactional
@@ -62,10 +65,24 @@ public class UsersService {
         return usersRepository.save(users);
     }
 
-    // 마이페이지 정보 조회
-    public UsersResDTO.GetInfo getMyInfo(Long userId) {
-        Users users = usersRepository.findById(userId)
+    // 로그인
+    @Transactional
+    public UsersResDTO.LoginResultDTO login(UsersReqDTO.LoginDTO request) {
+        Users users = usersRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.userPassword(), users.getUserPassword())) {
+            throw new UsersException(UsersErrorCode.INVALID_PASSWORD);
+        }
+
+        AuthUsers authUsers = new AuthUsers(users);
+        String accessToken = jwtUtil.createAccessToken(authUsers);
+
+        return UsersConverter.toLoginResultDTO(users, accessToken);
+    }
+
+    // 마이페이지 정보 조회
+    public UsersResDTO.GetInfo getMyInfo(Users users) {
         return UsersConverter.toGetInfo(users);
     }
 
