@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 public class MemberRequestDTO {
 
     // 내 정보 조회
@@ -40,7 +42,8 @@ public class MemberRequestDTO {
             String phoneNumber,
             @NotBlank(message = "주소는 필수입니다.")
             String address,
-            String addressDetail
+            String addressDetail,
+            List<Long> foodIds
     ){}
 
     // 회원 탈퇴

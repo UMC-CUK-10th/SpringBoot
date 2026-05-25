@@ -20,14 +20,15 @@ public class MemberAuthController {
 
     // 회원 가입 (/auth)
     @PostMapping("/users")
-    public APIResponse<Object> joinMember(
+    public APIResponse<MemberResponseDTO.CreateInfo> joinMember(
             @RequestBody @Valid MemberRequestDTO.CreateInfo dto
     ){
 
-        // 회원 가입 로직
+        MemberResponseDTO.CreateInfo responseDTO =
+                memberService.joinMember(dto);
 
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code, null);
+        return APIResponse.onSuccess(code, responseDTO);
     }
 
     // 회원 탈퇴

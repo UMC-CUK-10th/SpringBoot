@@ -10,6 +10,15 @@ import java.util.List;
 
 public class MemberResponseDTO {
 
+    // 회원 가입
+    @Builder
+    public record CreateInfo(
+            Long id,
+            String name,
+            String username,
+            String email
+    ){}
+
     // 내 정보 조회
     @Builder
     public record GetInfo(

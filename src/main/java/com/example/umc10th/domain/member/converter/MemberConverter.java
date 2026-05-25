@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.member.converter;
 
+import com.example.umc10th.domain.member.dto.MemberRequestDTO;
 import com.example.umc10th.domain.member.dto.MemberResponseDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.enums.Gender;
@@ -8,6 +9,36 @@ import jakarta.persistence.Converter;
 import org.springframework.data.domain.Page;
 
 public class MemberConverter {
+
+    // 회원 가입 (Member 엔티티 만들기)
+    public static Member toMember(
+            MemberRequestDTO.CreateInfo dto,
+            String encodedPassword
+    ){
+        return Member.builder()
+                .username(dto.username())
+                .name(dto.name())
+                .password(encodedPassword)
+                .gender(dto.gender())
+                .birth(dto.birth())
+                .email(dto.email())
+                .phoneNumber(dto.phoneNumber())
+                .address(dto.address())
+                .addressDetail(dto.addressDetail())
+                .build();
+    }
+
+    // 회원 가입 (프론트엔드 반환용)
+    public static MemberResponseDTO.CreateInfo toCreateInfo(
+            Member member
+    ) {
+        return MemberResponseDTO.CreateInfo.builder()
+                .id(member.getId())
+                .username(member.getUsername())
+                .name(member.getName())
+                .email(member.getEmail())
+                .build();
+    }
 
     // 내 정보 조회
     public static MemberResponseDTO.GetInfo toGetInfo(
