@@ -5,38 +5,30 @@ import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
-import com.example.umc10th.global.security.JwtTokenProvider;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reviews")
-@SecurityRequirement(name = "JWT")
+@SecurityRequirement(name = "bearerAuth")
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public ReviewController(
-            ReviewService reviewService,
-            JwtTokenProvider jwtTokenProvider
-    ) {
+    public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     // 리뷰 생성
     // POST /api/reviews
     @PostMapping
     public ApiResponse<ReviewResDTO.CreateReviewResultDTO> createReview(
-            @Parameter(hidden = true)
-            @RequestHeader("Authorization") String authorizationHeader,
-
+            Authentication authentication,
             @RequestBody @Valid ReviewReqDTO.CreateReviewDTO request
     ) {
-        Long memberId = jwtTokenProvider.getMemberIdFromAuthorizationHeader(authorizationHeader);
+        Long memberId = (Long) authentication.getPrincipal();
 
         ReviewResDTO.CreateReviewResultDTO result = reviewService.createReview(
                 memberId,
@@ -56,15 +48,13 @@ public class ReviewController {
     // GET /api/reviews/my?sortType=STAR&cursorStar=5&cursorId=10&size=10
     @GetMapping("/my")
     public ApiResponse<ReviewResDTO.MyReviewListResponseDTO> getMyReviews(
-            @Parameter(hidden = true)
-            @RequestHeader("Authorization") String authorizationHeader,
-
+            Authentication authentication,
             @RequestParam(defaultValue = "ID") String sortType,
             @RequestParam(required = false) Long cursorId,
             @RequestParam(required = false) Integer cursorStar,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        Long memberId = jwtTokenProvider.getMemberIdFromAuthorizationHeader(authorizationHeader);
+        Long memberId = (Long) authentication.getPrincipal();
 
         ReviewResDTO.MyReviewListResponseDTO response =
                 reviewService.getMyReviews(

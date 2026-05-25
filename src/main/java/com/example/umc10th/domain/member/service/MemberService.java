@@ -6,6 +6,7 @@ import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.global.security.JwtTokenProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +16,16 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider) {
+    public MemberService(
+            MemberRepository memberRepository,
+            JwtTokenProvider jwtTokenProvider,
+            PasswordEncoder passwordEncoder
+    ) {
         this.memberRepository = memberRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Member signUp(MemberReqDTO.SignUpDTO request) {
@@ -31,7 +38,17 @@ public class MemberService {
             throw new RuntimeException("이미 사용 중인 닉네임입니다.");
         }
 
-        Member member = MemberConverter.toMember(request);
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        Member member = new Member(
+                request.getEmail(),
+                encodedPassword,
+                request.getNickname(),
+                request.getGender(),
+                request.getBirth(),
+                request.getAddress(),
+                request.getDetailAddress()
+        );
 
         return memberRepository.save(member);
     }
@@ -41,7 +58,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다."));
 
-        if (!member.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다.");
         }
 
