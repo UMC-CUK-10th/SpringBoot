@@ -15,7 +15,17 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "region_id")
     private Location location;
+
+    public Long getId() {
+        return storeId;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

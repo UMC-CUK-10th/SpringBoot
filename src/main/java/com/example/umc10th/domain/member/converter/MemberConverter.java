@@ -1,13 +1,38 @@
 package com.example.umc10th.domain.member.converter;
 
 import com.example.umc10th.domain.member.dto.MemberResDTO;
-import com.example.umc10th.domain.mission.entity.MemberMission;
+import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.global.security.dto.OAuthDTO;
+import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberConverter {
+
+    public static Member toMember(OAuthDTO dto) {
+        return new Member(
+                null,
+                dto.getSocialEmail(),
+                "",
+                "ROLE_USER",
+                dto.getSocialType(),
+                dto.getSocialUid()
+        );
+    }
+
+    public static MemberResDTO.Login toLogin(String accessToken) {
+        return new MemberResDTO.Login(accessToken);
+    }
+
+    public static MemberResDTO.GetInfo toGetInfo(Member member) {
+        return new MemberResDTO.GetInfo(
+                member.getId(),
+                member.getEmail(),
+                member.getRole()
+        );
+    }
 
     /**
      * 과제 1: MemberMission Page → MissionListRes 변환
