@@ -1,7 +1,8 @@
-package com.example.umc_spring.domain.member.security;
+package com.example.umc_spring.domain.member.service;
 
 import com.example.umc_spring.domain.member.entity.Member;
 import com.example.umc_spring.domain.member.repository.MemberRepository;
+import com.example.umc_spring.domain.member.security.AuthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -2,10 +2,13 @@ package com.example.umc_spring.domain.member.controller;
 
 import com.example.umc_spring.domain.member.dto.MemberReqDTO;
 import com.example.umc_spring.domain.member.dto.MemberResDTO;
+import com.example.umc_spring.domain.member.security.AuthMember;
 import com.example.umc_spring.domain.member.service.MemberService;
 import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 import com.example.umc_spring.global.apiPayload.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,19 +19,28 @@ public class MemberController {
 
     @PostMapping("/members/signup")
     public ApiResponse<MemberResDTO.JoinResultDTO> join(
-            @RequestBody MemberReqDTO.JoinDTO request
+            @RequestBody @Valid MemberReqDTO.JoinDTO request
     ) {
         return ApiResponse.onSuccess(
                 memberService.join(request)
         );
     }
 
-    @GetMapping("/users/me")
-    public ApiResponse<MemberResDTO.MyPageDTO> getMyPage() {
-        Long userId = 1L;
-
+    @PostMapping("/members/login")
+    public ApiResponse<MemberResDTO.LoginResultDTO> login(
+            @RequestBody @Valid MemberReqDTO.LoginDTO request
+    ) {
         return ApiResponse.onSuccess(
-                memberService.getMyPage(userId)
+                memberService.login(request)
+        );
+    }
+
+    @GetMapping("/users/me")
+    public ApiResponse<MemberResDTO.MyPageDTO> getMyPage(
+            @AuthenticationPrincipal AuthMember authMember
+    ) {
+        return ApiResponse.onSuccess(
+                memberService.getMyPage(authMember)
         );
     }
 

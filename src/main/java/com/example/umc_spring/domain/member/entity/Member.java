@@ -34,8 +34,9 @@ public class Member {
     @Column(name = "user_address")
     private String userAddress;
 
+    @Builder.Default
     @Column(name = "user_point")
-    private Integer userPoint;
+    private Integer userPoint = 0;
 
     @Column(name = "social_provider")
     private String socialProvider;

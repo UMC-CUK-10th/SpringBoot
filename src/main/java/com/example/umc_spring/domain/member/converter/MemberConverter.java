@@ -27,4 +27,30 @@ public class MemberConverter {
                 .memberId(member.getId())
                 .build();
     }
+
+    public static MemberResDTO.LoginResultDTO toLoginResultDTO(
+            Member member,
+            String accessToken
+    ) {
+        return MemberResDTO.LoginResultDTO.builder()
+                .memberId(member.getId())
+                .accessToken(accessToken)
+                .build();
+    }
+
+    public static MemberResDTO.MyPageDTO toMyPageDTO(
+            Member member,
+            Long reviewCount,
+            Long inProgressMissionCount,
+            Long completedMissionCount
+    ) {
+        return MemberResDTO.MyPageDTO.builder()
+                .userId(member.getId())
+                .userName(member.getUserName())
+                .userPoint(member.getUserPoint())
+                .reviewCount(reviewCount)
+                .inProgressMissionCount(inProgressMissionCount)
+                .completedMissionCount(completedMissionCount)
+                .build();
+    }
 }
