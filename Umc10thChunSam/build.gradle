@@ -57,6 +57,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
 
 
+    //passkey
+    implementation 'org.springframework.security:spring-security-webauthn'
 }
 
 tasks.named('test') {
