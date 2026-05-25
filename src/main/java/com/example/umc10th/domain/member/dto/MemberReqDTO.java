@@ -23,9 +23,9 @@ public class MemberReqDTO {
             String name,
             @NotBlank(message = "이메일은 필수입니다.")
             @Email(message = "올바른 이메일 형식이어야 합니다.")
-            String email, // 추가된 속성
+            String email,
             @NotBlank(message = "비밀번호는 필수입니다.")
-            String password, // 추가된 속성
+            String password,
             @NotNull(message = "성별은 필수입니다.")
             Gender gender,
             @NotNull(message = "생일은 필수입니다.")
