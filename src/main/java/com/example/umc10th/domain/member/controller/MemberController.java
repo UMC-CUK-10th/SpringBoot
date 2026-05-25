@@ -3,17 +3,7 @@ package com.example.umc10th.domain.member.controller;
 import com.example.umc10th.domain.global.apiPayload.ApiResponse;
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
-import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
-import com.example.umc10th.domain.review.entity.Review;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-import com.example.umc10th.domain.member.dto.MemberReqDTO;
-import com.example.umc10th.domain.member.dto.MemberResDTO;
-import com.example.umc10th.domain.member.service.MemberService;
-import com.example.umc10th.domain.global.apiPayload.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,20 +13,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final MemberService memberQueryService;
+    private final MemberService memberService;
 
     /**
-     * 과제 1: 내가 진행중인 미션 조회 (오프셋 페이지네이션)
-     * - 사용자 ID 를 Request Body 로 수신
-     *
+     * 회원가입 API (Public)
+     * POST /members/signup
+     */
+    @PostMapping("/signup")
+    public ApiResponse<MemberResDTO.SignUpResponse> signUp(
+            @RequestBody @Valid MemberReqDTO.SignUpRequest request
+    ) {
+        MemberResDTO.SignUpResponse result = memberService.signUp(request);
+        return ApiResponse.onSuccess(result);
+    }
+
+    /**
+     * 과제 1: 내가 진행중인 미션 조회 (Private)
      * POST /members/missions/challenging
-     * Body: { "memberId": 1, "page": 0, "size": 10 }
      */
     @PostMapping("/missions/challenging")
     public ApiResponse<MemberResDTO.MissionListRes> getChallengingMissions(
             @RequestBody @Valid MemberReqDTO.GetMissionListReq request
     ) {
-        MemberResDTO.MissionListRes result = memberQueryService.getChallengingMissions(request);
+        MemberResDTO.MissionListRes result = memberService.getChallengingMissions(request);
         return ApiResponse.onSuccess(result);
     }
 }
