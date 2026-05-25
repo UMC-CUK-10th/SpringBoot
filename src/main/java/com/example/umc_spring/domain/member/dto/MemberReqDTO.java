@@ -2,20 +2,21 @@ package com.example.umc_spring.domain.member.dto;
 
 import lombok.Getter;
 
-import java.util.List;
-
 public class MemberReqDTO {
 
     @Getter
-    public static class SignUpDTO {
-        private Boolean termsAgreed;
-        private Boolean privacyAgreed;
-        private String userName;
-        private String gender;
-        private Integer userBirth;
-        private String userAddress;
+    public static class JoinDTO {
+
+        private String name;
+
         private String email;
-        private String phoneNumber;
-        private List<Long> favoriteFoodIds;
+
+        private String password;
+
+        private String gender;
+
+        private Integer birth;
+
+        private String address;
     }
 }

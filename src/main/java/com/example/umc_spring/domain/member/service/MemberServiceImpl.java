@@ -1,16 +1,18 @@
 package com.example.umc_spring.domain.member.service;
 
+import com.example.umc_spring.domain.member.converter.MemberConverter;
+import com.example.umc_spring.domain.member.dto.MemberReqDTO;
 import com.example.umc_spring.domain.member.dto.MemberResDTO;
 import com.example.umc_spring.domain.member.entity.Member;
 import com.example.umc_spring.domain.member.repository.MemberRepository;
 import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 import com.example.umc_spring.domain.mission.entity.Mission;
-import com.example.umc_spring.domain.mission.enums.MissionStatus;
 import com.example.umc_spring.domain.mission.repository.MissionRepository;
 import com.example.umc_spring.domain.mission.repository.UserMissionRepository;
 import com.example.umc_spring.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,20 @@ public class MemberServiceImpl implements MemberService {
     private final ReviewRepository reviewRepository;
     private final UserMissionRepository userMissionRepository;
     private final MissionRepository missionRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional
+    public MemberResDTO.JoinResultDTO join(MemberReqDTO.JoinDTO request) {
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        Member member = MemberConverter.toMember(request, encodedPassword);
+
+        Member savedMember = memberRepository.save(member);
+
+        return MemberConverter.toJoinResultDTO(savedMember);
+    }
 
     @Override
     public MemberResDTO.MyPageDTO getMyPage(Long userId) {

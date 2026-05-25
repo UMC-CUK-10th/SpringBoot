@@ -1,5 +1,6 @@
 package com.example.umc_spring.domain.member.controller;
 
+import com.example.umc_spring.domain.member.dto.MemberReqDTO;
 import com.example.umc_spring.domain.member.dto.MemberResDTO;
 import com.example.umc_spring.domain.member.service.MemberService;
 import com.example.umc_spring.domain.mission.dto.MissionResDTO;
@@ -12,6 +13,15 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @PostMapping("/members/signup")
+    public ApiResponse<MemberResDTO.JoinResultDTO> join(
+            @RequestBody MemberReqDTO.JoinDTO request
+    ) {
+        return ApiResponse.onSuccess(
+                memberService.join(request)
+        );
+    }
 
     @GetMapping("/users/me")
     public ApiResponse<MemberResDTO.MyPageDTO> getMyPage() {
