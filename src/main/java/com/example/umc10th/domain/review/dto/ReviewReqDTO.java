@@ -1,24 +1,21 @@
 package com.example.umc10th.domain.review.dto;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class ReviewReqDTO {
 
-    // 리뷰 쓰기
-    public record CreateReview(
+    public record MyReviewCursorRequest(
+            @NotNull(message = "userId는 필수입니다.")
+            Long userId,
 
-            @NotNull
-            Long storeId,
+            Long cursorId,
 
-            @NotBlank
-            String content,
+            Float cursorScore,
 
-            @Min(1)
-            @Max(5)
-            int rating
-
-    ) {}
+            @NotNull(message = "size는 필수입니다.")
+            @Min(value = 1, message = "size는 1 이상이어야 합니다.")
+            Integer size
+    ) {
+    }
 }

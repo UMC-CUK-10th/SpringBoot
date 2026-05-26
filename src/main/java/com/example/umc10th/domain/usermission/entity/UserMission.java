@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.userMission.entity;
+package com.example.umc10th.domain.usermission.entity;
 
 import com.example.umc10th.domain.user.entity.User;
 import com.example.umc10th.domain.mission.entity.Mission;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class userMission {
+public class UserMission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

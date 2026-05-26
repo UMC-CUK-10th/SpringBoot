@@ -1,10 +1,24 @@
 package com.example.umc10th.domain.review.dto;
 
+import java.util.List;
+
 public class ReviewResDTO {
 
-    public record ReviewInfo(
+    public record MyReviewResponse(
             Long reviewId,
             String content,
-            int rating
-    ) {}
+            Float score,
+            Long storeId,
+            String storeName
+    ) {
+    }
+
+    public record MyReviewCursorResponse(
+            List<MyReviewResponse> reviewList,
+            Integer listSize,
+            Long nextCursorId,
+            Float nextCursorScore,
+            Boolean hasNext
+    ) {
+    }
 }

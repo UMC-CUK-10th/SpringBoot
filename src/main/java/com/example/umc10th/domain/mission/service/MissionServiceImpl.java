@@ -1,55 +1,29 @@
 package com.example.umc10th.domain.mission.service;
 
+import com.example.umc10th.domain.mission.converter.MissionConverter;
+import com.example.umc10th.domain.mission.dto.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
-import com.example.umc10th.domain.mission.entity.Mission;
-import com.example.umc10th.domain.mission.repository.MissionRepository;
+import com.example.umc10th.domain.usermission.entity.UserMission;
+import com.example.umc10th.domain.usermission.repository.UserMissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MissionServiceImpl implements MissionService {
 
-    private final MissionRepository missionRepository;
+    private final UserMissionRepository userMissionRepository;
 
     @Override
-    public Page<MissionResDTO.MissionInfo> getMissions(Pageable pageable) {
+    public MissionResDTO.MyMissionListResponse getMyMissionList(MissionReqDTO.MyMissionListRequest request) {
 
-        return missionRepository.findMissionList(pageable)
-                .map(mission -> new MissionResDTO.MissionInfo(
-                        mission.getId(),
-                        mission.getContent(),
-                        "SUCCESS"
-                ));
-    }
+        PageRequest pageRequest = PageRequest.of(request.page(), request.size());
 
-    @Override
-    public MissionResDTO.MissionDetail getMissionDetail(Long missionId) {
+        Page<UserMission> userMissionPage =
+                userMissionRepository.findByUserId(request.userId(), pageRequest);
 
-        Mission mission = missionRepository.findById(missionId)
-                .orElseThrow();
-
-        return new MissionResDTO.MissionDetail(
-                mission.getId(),
-                mission.getContent(),
-                mission.getContent(),
-                mission.getReward()
-        );
-    }
-
-    @Override
-    public Page<MissionResDTO.MissionInfo> getMissionsByStatus(
-            String status,
-            Pageable pageable
-    ) {
-
-        return missionRepository.findMissionList(pageable)
-                .map(mission -> new MissionResDTO.MissionInfo(
-                        mission.getId(),
-                        mission.getContent(),
-                        status
-                ));
+        return MissionConverter.toMyMissionListResponse(userMissionPage);
     }
 }
