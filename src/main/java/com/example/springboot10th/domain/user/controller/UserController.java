@@ -5,30 +5,51 @@ import com.example.springboot10th.domain.user.entity.User;
 import com.example.springboot10th.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
+import com.example.springboot10th.domain.user.dto.UserResponseDTO;
+import com.example.springboot10th.global.apiPayload.ApiResponse;
+import com.example.springboot10th.global.apiPayload.code.GeneralSuccessCode;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.springboot10th.domain.user.dto.UserRequestDTO;
+import jakarta.validation.Valid;
+
+import com.example.springboot10th.domain.store.dto.ReviewResponseDTO;
+import com.example.springboot10th.domain.store.service.ReviewService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
+    private final ReviewService reviewService;
 
     @GetMapping("/{userId}/mypage")
-    public ResponseEntity<String> getMyPage(@PathVariable("userId") Long userId) {
-        User user = userService.getMyPage(userId);
-        return ResponseEntity.ok("마이페이지 조회 성공 (닉네임: " + user.getNickname() + ")");
+    public ApiResponse<UserResponseDTO.UserProfileResponse> getMyPage(@PathVariable("userId") Long userId) {
+        return ApiResponse.onSuccess(GeneralSuccessCode.OK, userService.getMyPage(userId));
     }
 
     @GetMapping("/{userId}/missions")
-    public ResponseEntity<String> getMyMissions(
+    public ApiResponse<UserResponseDTO.UserMissionListResponse> getMyMissions(
             @PathVariable("userId") Long userId,
             @RequestParam("status") String status,
             @RequestParam(name = "page", defaultValue = "0") Integer page) {
+        return ApiResponse.onSuccess(GeneralSuccessCode.OK, userService.getMyMissions(userId, status, page));
+    }
 
-        Page<UserMission> missions = userService.getMyMissions(userId, status, page);
-        return ResponseEntity
-                .ok("내 미션 조회 성공 (총 페이지: " + missions.getTotalPages() + ", 현재 페이지: " + missions.getNumber() + ")");
+    @PostMapping("/missions/in-progress")
+    public ApiResponse<UserResponseDTO.UserMissionListResponse> getMyInProgressMissions(
+            @Valid @RequestBody UserRequestDTO.GetInProgressMissionsRequest request) {
+        return ApiResponse.onSuccess(GeneralSuccessCode.OK, userService.getMyInProgressMissions(request));
+    }
+
+    @GetMapping("/{userId}/reviews")
+    public ApiResponse<ReviewResponseDTO.ReviewCursorPaginationResponse> getMyReviews(
+            @PathVariable("userId") Long userId,
+            @RequestParam(name = "cursorId", required = false) Long cursorId,
+            @RequestParam(name = "cursorScore", required = false) Float cursorScore,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = "id") String sortBy) {
+        return ApiResponse.onSuccess(GeneralSuccessCode.OK, reviewService.getMyReviewsWithCursor(userId, cursorId, cursorScore, pageSize, sortBy));
     }
 }

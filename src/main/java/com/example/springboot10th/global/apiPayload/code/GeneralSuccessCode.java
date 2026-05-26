@@ -30,6 +30,7 @@ public enum GeneralSuccessCode implements BaseSuccessCode {
                 .message(message)
                 .code(code)
                 .isSuccess(true)
+                .httpStatus(httpStatus)
                 .build();
     }
 }

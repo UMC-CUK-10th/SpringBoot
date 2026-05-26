@@ -5,7 +5,7 @@ import com.example.springboot10th.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -19,13 +19,13 @@ public class Mission extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Integer reward;
+    private Integer point;
 
     @Column(nullable = false)
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     @Column(nullable = false, length = 200)
-    private String missionSpec;
+    private String conditional;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")

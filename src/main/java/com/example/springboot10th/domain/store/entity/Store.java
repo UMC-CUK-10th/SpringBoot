@@ -21,6 +21,9 @@ public class Store extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String address;
 
+    @Column(length = 50)
+    private String category;
+
     @Builder.Default
     @Column(columnDefinition = "FLOAT DEFAULT 0.0")
     private Float score = 0.0f;

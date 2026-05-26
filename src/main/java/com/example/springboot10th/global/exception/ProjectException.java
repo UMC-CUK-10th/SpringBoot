@@ -1,4 +1,4 @@
-package com.example.springboot10th.global.apiPayload.exception;
+package com.example.springboot10th.global.exception;
 
 import com.example.springboot10th.global.apiPayload.code.BaseErrorCode;
 import com.example.springboot10th.global.apiPayload.code.ErrorReasonDTO;

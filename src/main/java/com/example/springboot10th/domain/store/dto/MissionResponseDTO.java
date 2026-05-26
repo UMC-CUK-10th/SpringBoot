@@ -1,10 +1,10 @@
-package com.example.springboot10th.domain.mission.dto;
+package com.example.springboot10th.domain.store.dto;
 
 import lombok.Builder;
 import java.util.List;
 
 public class MissionResponseDTO {
-
+    
     @Builder
     public record GetMission(
         Long missionId,

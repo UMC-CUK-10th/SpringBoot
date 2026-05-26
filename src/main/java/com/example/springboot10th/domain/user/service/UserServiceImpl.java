@@ -11,6 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.springboot10th.domain.user.converter.UserConverter;
+import com.example.springboot10th.domain.user.dto.UserRequestDTO;
+import com.example.springboot10th.domain.user.dto.UserResponseDTO;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,14 +24,26 @@ public class UserServiceImpl implements UserService {
     private final UserMissionRepository userMissionRepository;
 
     @Override
-    public User getMyPage(Long userId) {
-        return userRepository.findById(userId)
+    public UserResponseDTO.UserProfileResponse getMyPage(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return UserConverter.toUserProfileResponse(user);
     }
 
     @Override
-    public Page<UserMission> getMyMissions(Long userId, String status, Integer page) {
+    public UserResponseDTO.UserMissionListResponse getMyMissions(Long userId, String status, Integer page) {
         MissionStatus missionStatus = MissionStatus.valueOf(status.toUpperCase());
-        return userMissionRepository.findMyMissions(userId, missionStatus, PageRequest.of(page, 10));
+        Page<UserMission> missionPage = userMissionRepository.findMyMissions(userId, missionStatus, PageRequest.of(page, 10));
+        return UserConverter.toUserMissionListResponse(missionPage);
+    }
+
+    @Override
+    public UserResponseDTO.UserMissionListResponse getMyInProgressMissions(UserRequestDTO.GetInProgressMissionsRequest request) {
+        Page<UserMission> missionPage = userMissionRepository.findMyMissions(
+                request.getUserId(),
+                MissionStatus.CHALLENGING,
+                PageRequest.of(request.getPageNumber(), request.getPageSize())
+        );
+        return UserConverter.toUserMissionListResponse(missionPage);
     }
 }
