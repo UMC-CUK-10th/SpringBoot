@@ -13,6 +13,10 @@ public enum MemberErrorCode implements BaseErrorCode {
             "MEMBER400_1",
             "이미 가입된 이메일입니다."),
 
+    NOT_SUPPORT_SOCIAL_PROVIDER(HttpStatus.BAD_REQUEST,
+            "MEMBER400_2",
+            "지원하지 않는 소셜 로그인 제공자입니다."),
+
     MEMBER_INVALID(HttpStatus.UNAUTHORIZED,
             "MEMBER401_1",
             "유효하지 않은 자격 증명입니다."),
@@ -20,10 +24,6 @@ public enum MemberErrorCode implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,
             "MEMBER404_1",
             "해당 사용자를 찾지 못했습니다."),
-
-    FOOD_NOT_FOUND(HttpStatus.NOT_FOUND,
-            "FOOD404_2",
-            "해당 음식 카테고리를 찾지 못했습니다."),
     ;
 
     private final HttpStatus status;

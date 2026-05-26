@@ -1,12 +1,15 @@
 package com.example.umc10th.domain.member.controller;
 
+import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.security.entity.AuthMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +25,9 @@ public class MemberController {
     // 5주차 예제 - 마이페이지 API
     @PostMapping("/api/members/me")
     public ApiResponse<MemberResDTO.GetInfo> getInfo(
-            @RequestBody @Valid MemberReqDTO.GetInfo dto
+            @AuthenticationPrincipal AuthMember member
     ){
-        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_FOUND_OK, memberService.getInfo(dto));
+        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_FOUND_OK, MemberConverter.toGetInfo(member.getMember()));
     }
 
     // 회원가입 API
@@ -40,6 +43,6 @@ public class MemberController {
     public ApiResponse<MemberResDTO.LoginDTO> login(
             @RequestBody @Valid MemberReqDTO.LoginDTO dto
     ){
-        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_FOUND_OK, null);
+        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_FOUND_OK, memberService.login(dto));
     }
 }

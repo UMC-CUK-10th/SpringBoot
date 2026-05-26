@@ -3,11 +3,9 @@ package com.example.umc10th.domain.member.dto;
 import com.example.umc10th.domain.member.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class MemberReqDTO {
 
@@ -33,9 +31,7 @@ public class MemberReqDTO {
             @NotBlank(message = "주소는 필수입니다.")
             String address,
             @NotBlank(message = "전화번호는 필수입니다.")
-            String phoneNum,
-            @NotEmpty(message = "선호 카테고리는 하나 이상 선택해야 합니다.")
-            List<Long> preferCategory
+            String phoneNum
     ){}
 
     // 로그인 API
