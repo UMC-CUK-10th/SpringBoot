@@ -79,4 +79,14 @@ public class MemberReqDTO {
             return password;
         }
     }
+
+    public static class OAuthLoginDTO {
+
+        @NotBlank(message = "카카오 access token은 필수입니다.")
+        private String accessToken;
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+    }
 }
