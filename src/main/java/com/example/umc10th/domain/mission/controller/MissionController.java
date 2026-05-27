@@ -8,8 +8,11 @@ import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.domain.mission.service.query.MemberMissionQueryService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.security.entity.AuthMember;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +38,7 @@ public class MissionController {
     @GetMapping("/restaurants/{restaurantId}/missions")
     public ApiResponse<MissionResDTO.Pagination<MissionResDTO.GetMission>> getMissions(
             @PathVariable Long restaurantId,
-            @RequestParam Integer pageSize,
+            @RequestParam @Min(value = 1, message = "페이지 크기는 1 이상이어야 합니다.") Integer pageSize,
             @RequestParam String cursor,
             @RequestParam String query
     ){
@@ -45,21 +48,21 @@ public class MissionController {
     // 나의 미션 목록 조회 API (오프셋 기반 페이지네이션)
     @GetMapping("/missions/me")
     public ApiResponse<MemberMissionResDTO.Pagination<MemberMissionResDTO.MemberMissionDTO>> getMissionList(
-            @RequestBody @Valid MissionReqDTO.GetMyMissionListDTO request,
+            @AuthenticationPrincipal AuthMember member,
             @RequestParam("status") MissionStatus missionStatus,
-            @RequestParam Integer pageSize,
-            @RequestParam Integer pageNumber,
+            @RequestParam @Min(value = 1, message = "페이지 크기는 1 이상이어야 합니다.") Integer pageSize,
+            @RequestParam @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.") Integer pageNumber,
             @RequestParam(required = false) String sort
     ){
-        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_OK, memberMissionQueryService.getMissions(request.memberId(), pageSize, pageNumber, missionStatus));
+        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_OK, memberMissionQueryService.getMissions(member.getMember().getId(), pageSize, pageNumber, missionStatus));
     }
 
     // 미션 성공 누르기 API
-    @GetMapping("/missions/{memberMissionId}/complete")
+    @PatchMapping("/missions/{memberMissionId}/complete")
     public ApiResponse<MissionResDTO.CompletedMissionDTO> completeMissions(
             @PathVariable("memberMissionId") Long memberMissionId,
-            @RequestBody @Valid MissionReqDTO.CompleteMissionDTO request
+            @AuthenticationPrincipal AuthMember member
     ) {
-        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_COMPLETE_OK, null);
+        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_COMPLETE_OK, missionService.completeMission(member.getMember().getId(), memberMissionId));
     }
 }

@@ -33,57 +33,11 @@ public class MemberMissionConverter {
                 .build();
     }
 
-    // 진행 중인 미션 조회 API
-    public static MemberMissionResDTO.InProgressMissionDTO toInProgressMissionDTO(MemberMission memberMission) {
-        var mission = toMissionListDTO(memberMission);
-        return MemberMissionResDTO.InProgressMissionDTO.builder()
-                .memberMissionId(mission.memberMissionId())
-                .missionId(mission.missionId())
-                .restId(mission.restId())
-                .restName(mission.restName())
-                .conditional(mission.conditional())
-                .price(mission.price())
-                .point(mission.point())
-                .deadline(mission.deadline())
-                .status(mission.status())
-                .updatedAt(mission.updatedAt())
-                .build();
-    }
-
-    public static MemberMissionResDTO.InProgressMissionListDTO toInProgressMissionListDTO(Page<MemberMission> memberMissions) {
-        return MemberMissionResDTO.InProgressMissionListDTO.builder()
+    // 미션 목록 DTO (status 값으로 진행 중/완료 상태를 구분)
+    public static MemberMissionResDTO.MissionListDTO toMissionListDTO(Page<MemberMission> memberMissions) {
+        return MemberMissionResDTO.MissionListDTO.builder()
                 .missionList(memberMissions.stream()
-                        .map(MemberMissionConverter::toInProgressMissionDTO)
-                        .toList())
-                .listSize(memberMissions.getNumberOfElements())
-                .totalPage(memberMissions.getTotalPages())
-                .totalElements(memberMissions.getTotalElements())
-                .isFirst(memberMissions.isFirst())
-                .isLast(memberMissions.isLast())
-                .build();
-    }
-
-    // 진행 완료한 미션 조회 API
-    public static MemberMissionResDTO.CompletedMissionDTO toCompletedMissionDTO(MemberMission memberMission) {
-        var mission = toMissionListDTO(memberMission);
-        return MemberMissionResDTO.CompletedMissionDTO.builder()
-                .memberMissionId(mission.memberMissionId())
-                .missionId(mission.missionId())
-                .restId(mission.restId())
-                .restName(mission.restName())
-                .conditional(mission.conditional())
-                .price(mission.price())
-                .point(mission.point())
-                .deadline(mission.deadline())
-                .status(mission.status())
-                .updatedAt(mission.updatedAt())
-                .build();
-    }
-
-    public static MemberMissionResDTO.CompletedMissionListDTO toCompletedMissionListDTO(Page<MemberMission> memberMissions) {
-        return MemberMissionResDTO.CompletedMissionListDTO.builder()
-                .missionList(memberMissions.stream()
-                        .map(MemberMissionConverter::toCompletedMissionDTO)
+                        .map(MemberMissionConverter::toMissionListDTO)
                         .toList())
                 .listSize(memberMissions.getNumberOfElements())
                 .totalPage(memberMissions.getTotalPages())

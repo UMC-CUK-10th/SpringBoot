@@ -9,6 +9,7 @@ import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.security.entity.AuthMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public class MemberController {
     private final MemberService memberService;
 
     // 5주차 예제 - 마이페이지 API
-    @PostMapping("/api/members/me")
+    @GetMapping("/api/members/me")
     public ApiResponse<MemberResDTO.GetInfo> getInfo(
             @AuthenticationPrincipal AuthMember member
     ){

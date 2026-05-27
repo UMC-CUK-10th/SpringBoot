@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class MissionReqDTO {
 
@@ -18,19 +17,4 @@ public class MissionReqDTO {
             String conditional
     ){}
 
-    // 나의 미션 목록 조회 DTO
-    public record GetMyMissionListDTO(
-            @NotNull(message = "회원 ID는 필수입니다.")
-            Long memberId
-    ) {}
-
-    // 미션 성공 누르기 DTO
-    public record CompleteMissionDTO(
-            @NotNull(message = "미션 ID는 필수입니다.")
-            Long missionId,
-            @NotNull(message = "미션 완료 여부는 필수입니다.")
-            Boolean isCompleted,
-            LocalDateTime completedAt,
-            LocalDateTime updatedAt
-    ) {}
 }

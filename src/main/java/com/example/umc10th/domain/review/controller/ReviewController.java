@@ -6,6 +6,7 @@ import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc10th.domain.review.service.command.ReviewCommandService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class ReviewController {
     @GetMapping("/restaurants/{restaurantId}/reviews")
     public ApiResponse<ReviewResDTO.Pagination<ReviewResDTO.GetReviewDTO>> getReviews(
             @PathVariable Long restaurantId,
-            @RequestParam Integer pageSize,
+            @RequestParam @Min(value = 1, message = "페이지 크기는 1 이상이어야 합니다.") Integer pageSize,
             @RequestParam String cursor,
             @RequestParam String query
     ) {
