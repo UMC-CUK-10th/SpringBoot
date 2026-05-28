@@ -2,8 +2,6 @@ package com.example.umc10th.global.entity;
 
 import com.example.umc10th.domain.user.entity.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,10 +9,25 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
-public class AuthMember implements UserDetails {
+public class AuthUser implements UserDetails {
 
     private final User user;
+
+    public AuthUser(User user) {
+        this.user = user;
+    }
+
+    public Long getId() {
+        return user.getId();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public String getName() {
+        return user.getName();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -22,7 +35,6 @@ public class AuthMember implements UserDetails {
     }
 
     @Override
-    @Nullable
     public String getPassword() {
         return user.getPassword();
     }
@@ -31,6 +43,7 @@ public class AuthMember implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
