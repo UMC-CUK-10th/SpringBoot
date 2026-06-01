@@ -39,39 +39,36 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/v3/api-docs/**",
 
-            // 회원가입/로그인 허용
+            // 일반 회원가입/로그인 허용
             "/api/users/Auth",
-            "/api/users/login"
+            "/api/users/login",
+
+            // OAuth 로그인 허용
+            "/api/users/oauth/kakao/login"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // REST API에서는 CSRF 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // 세션 사용하지 않음
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // formLogin, httpBasic 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                // 인증/인가 실패 응답 통일
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
 
-                // 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ALLOW_URIS).permitAll()
                         .anyRequest().authenticated()
                 )
 
-                // JWT 필터 등록
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

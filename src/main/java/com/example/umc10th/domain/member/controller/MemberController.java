@@ -49,6 +49,18 @@ public class MemberController {
         );
     }
 
+    @PostMapping("/oauth/kakao/login")
+    public ApiResponse<MemberResDTO.LoginResultDTO> kakaoLogin(
+            @RequestBody @Valid MemberReqDTO.OAuthLoginDTO request
+    ) {
+        MemberResDTO.LoginResultDTO result = memberService.kakaoLogin(request);
+
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.LOGIN_SUCCESS,
+                result
+        );
+    }
+
     @GetMapping("/mypage")
     public ApiResponse<MemberResDTO.MyPageResponseDTO> getMyPage(
             Authentication authentication

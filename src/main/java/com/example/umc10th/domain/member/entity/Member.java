@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.enums.Gender;
+import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.domain.mission.enums.Address;
 import jakarta.persistence.*;
 
@@ -16,15 +17,12 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    // 로그인/JWT 발급용 이메일
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
-    // BCrypt로 암호화된 비밀번호 저장
     @Column(nullable = false, length = 255)
     private String password;
 
-    // ERD의 name을 닉네임으로 사용
     @Column(nullable = false, unique = true, length = 20)
     private String name;
 
@@ -38,6 +36,13 @@ public class Member {
 
     @Column(name = "detail_address", length = 255)
     private String detailAddress;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "social_type", nullable = false)
+    private SocialType socialType;
+
+    @Column(name = "kakao_id", unique = true)
+    private Long kakaoId;
 
     @Column(nullable = false)
     private Integer point = 0;
@@ -58,6 +63,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.socialType = SocialType.LOCAL;
         this.point = 0;
     }
 
@@ -77,6 +83,22 @@ public class Member {
         this.birth = birth;
         this.address = address;
         this.detailAddress = detailAddress;
+        this.socialType = SocialType.LOCAL;
+        this.point = 0;
+    }
+
+    public Member(
+            String email,
+            String password,
+            String name,
+            SocialType socialType,
+            Long kakaoId
+    ) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.socialType = socialType;
+        this.kakaoId = kakaoId;
         this.point = 0;
     }
 
@@ -87,6 +109,10 @@ public class Member {
 
         if (this.point == null) {
             this.point = 0;
+        }
+
+        if (this.socialType == null) {
+            this.socialType = SocialType.LOCAL;
         }
     }
 
@@ -125,6 +151,14 @@ public class Member {
 
     public String getDetailAddress() {
         return detailAddress;
+    }
+
+    public SocialType getSocialType() {
+        return socialType;
+    }
+
+    public Long getKakaoId() {
+        return kakaoId;
     }
 
     public Integer getPoint() {
