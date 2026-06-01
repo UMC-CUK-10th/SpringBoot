@@ -103,6 +103,7 @@ public class AuthController {
         }
     }
 
+    //jwt기반 로그인 구현 완료.
     @PostMapping("/loginjwt")
     public ApiResponse<LoginResjwt> loginjwt(
             @Valid @RequestBody LoginReq request,

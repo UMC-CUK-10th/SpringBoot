@@ -5,21 +5,33 @@ import com.example.umc10thchunsam.domain.auth.CustomEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.WebAuthnConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.webauthn.management.JdbcPublicKeyCredentialUserEntityRepository;
+import org.springframework.security.web.webauthn.management.JdbcUserCredentialRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+
+    private static final Set<String> ALLOWED_ORIGINS =
+            Set.of(
+                    "http://localhost:8080",
+                    "http://localhost:3000"
+            );
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -69,6 +81,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
 
 
+                )
+                .webAuthn(webAuth ->
+                        webAuth
+                                .rpId("localhost")
+                                .allowedOrigins(ALLOWED_ORIGINS)
+                                .disableDefaultRegistrationPage(true)
                 );
 
         return http.build();
@@ -87,6 +105,17 @@ public class SecurityConfig {
     public CustomEntryPoint customEntryPoint() {
         return new CustomEntryPoint();
     }
+    //패스키
+    @Bean
+    JdbcPublicKeyCredentialUserEntityRepository jdbcPublicKeyCredentialUserEntityRepository(JdbcOperations jdbc) {
+        return new JdbcPublicKeyCredentialUserEntityRepository(jdbc);
+    }
+
+    @Bean
+    JdbcUserCredentialRepository jdbcUserCredentialRepository(JdbcOperations jdbc) {
+        return new JdbcUserCredentialRepository(jdbc);
+    }
+
 
     // 🌐 CORS 설정 (Vercel 프론트 도메인 넣기)
     @Bean
