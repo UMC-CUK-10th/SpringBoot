@@ -9,8 +9,8 @@ public interface MemberMissionQueryService {
     MemberMissionResDTO.Pagination<MemberMissionResDTO.MemberMissionDTO> getMissions(Long memberId, Integer pageSize, Integer pageNumber, MissionStatus missionStatus);
 
     // 진행 중인 미션 조회 API
-    MemberMissionResDTO.InProgressMissionListDTO getInProgressMissions(Long memberId, Integer page);
+    MemberMissionResDTO.MissionListDTO getInProgressMissions(Long memberId, Integer page);
 
     // 진행 완료한 미션 조회 API
-    MemberMissionResDTO.CompletedMissionListDTO getCompletedMissions(Long memberId, Integer page);
+    MemberMissionResDTO.MissionListDTO getCompletedMissions(Long memberId, Integer page);
 }

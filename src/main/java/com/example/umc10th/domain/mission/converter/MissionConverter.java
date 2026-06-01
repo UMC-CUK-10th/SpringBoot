@@ -3,6 +3,7 @@ package com.example.umc10th.domain.mission.converter;
 import com.example.umc10th.domain.mission.dto.req.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.res.MissionResDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import com.example.umc10th.domain.restaurant.entity.Restaurant;
 
 import java.util.List;
@@ -30,6 +31,24 @@ public class MissionConverter {
                 .conditional(mission.getConditional())
                 .point(mission.getPoint())
                 .missionId(mission.getId())
+                .build();
+    }
+
+    public static MissionResDTO.CompletedMissionDTO toCompletedMissionDTO(MemberMission memberMission) {
+        Mission mission = memberMission.getMission();
+        Restaurant restaurant = mission.getRestaurant();
+
+        return MissionResDTO.CompletedMissionDTO.builder()
+                .memberMissionId(memberMission.getId())
+                .missionId(mission.getId())
+                .restId(restaurant.getId())
+                .restName(restaurant.getRestName())
+                .conditional(mission.getConditional())
+                .price(mission.getPrice())
+                .point(mission.getPoint())
+                .deadline(mission.getDeadline())
+                .status(memberMission.getMissionStatus().name())
+                .updatedAt(memberMission.getUpdatedAt())
                 .build();
     }
 

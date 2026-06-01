@@ -3,29 +3,25 @@ package com.example.umc10th.domain.member.service;
 import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
-import com.example.umc10th.domain.member.entity.Food;
 import com.example.umc10th.domain.member.entity.Member;
-import com.example.umc10th.domain.member.entity.mapping.MemberFood;
+import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
-import com.example.umc10th.domain.member.repository.FoodRepository;
-import com.example.umc10th.domain.member.repository.MemberFoodRepository;
 import com.example.umc10th.domain.member.repository.MemberRepository;
+import com.example.umc10th.global.security.entity.AuthMember;
+import com.example.umc10th.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final FoodRepository foodRepository;
-    private final MemberFoodRepository memberFoodRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     // 5주차 예제 - 마이페이지 API
     @Transactional(readOnly = true)
@@ -38,26 +34,27 @@ public class MemberService {
 
     @Transactional
     public MemberResDTO.SignUpDTO signUp(MemberReqDTO.SignUpDTO dto) {
-        if (memberRepository.existsByEmail(dto.email())) {
+        if (memberRepository.existsByEmailAndSocialType(dto.email(), SocialType.LOCAL)) {
             throw new MemberException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
-        }
-
-        List<Food> foods = foodRepository.findAllById(dto.preferCategory());
-        if (foods.size() != dto.preferCategory().size()) {
-            throw new MemberException(MemberErrorCode.FOOD_NOT_FOUND);
         }
 
         Member member = MemberConverter.toMember(dto, passwordEncoder.encode(dto.password()));
         Member savedMember = memberRepository.save(member);
 
-        List<MemberFood> memberFoods = foods.stream()
-                .map(food -> MemberFood.builder()
-                        .member(savedMember)
-                        .food(food)
-                        .build())
-                .toList();
-        memberFoodRepository.saveAll(memberFoods);
-
         return MemberConverter.toSignUpDTO(savedMember);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberResDTO.LoginDTO login(MemberReqDTO.LoginDTO dto) {
+        Member member = memberRepository.findByEmailAndSocialType(dto.email(), SocialType.LOCAL)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_INVALID));
+
+        if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
+            throw new MemberException(MemberErrorCode.MEMBER_INVALID);
+        }
+
+        String accessToken = jwtUtil.createAccessToken(new AuthMember(member));
+
+        return MemberConverter.toLoginDTO(member, accessToken);
     }
 }

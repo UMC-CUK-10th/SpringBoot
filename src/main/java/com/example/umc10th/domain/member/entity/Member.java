@@ -3,6 +3,7 @@ package com.example.umc10th.domain.member.entity;
 import com.example.umc10th.domain.member.entity.mapping.MemberFood;
 import com.example.umc10th.domain.member.entity.mapping.MemberTerm;
 import com.example.umc10th.domain.member.enums.Gender;
+import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.domain.member.enums.Status;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import com.example.umc10th.domain.review.entity.Review;
@@ -44,11 +45,18 @@ public class Member extends BaseEntity {
     @Column(name = "nickname", length = 20, nullable = false)
     private String nickname;
 
-    @Column(name = "email", columnDefinition = "TEXT", nullable = false, unique = true)
+    @Column(name = "email", columnDefinition = "TEXT", nullable = false)
     private String email;
 
     @Column(name = "password", length = 100, nullable = false)
     private String password;
+
+    @Column(name = "social_type")
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    @Column(name = "social_uid")
+    private String socialUid;
 
     @Column(name = "phone_num", length = 15, nullable = false)
     private String phone_num;

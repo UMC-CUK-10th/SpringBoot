@@ -4,8 +4,11 @@ import com.example.umc10th.domain.mission.converter.MissionConverter;
 import com.example.umc10th.domain.mission.dto.req.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.res.MissionResDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import com.example.umc10th.domain.mission.enums.MissionStatus;
 import com.example.umc10th.domain.mission.exception.MissionException;
 import com.example.umc10th.domain.mission.exception.code.MissionErrorCode;
+import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import com.example.umc10th.domain.restaurant.entity.Restaurant;
 import com.example.umc10th.domain.restaurant.exception.RestaurantException;
@@ -23,6 +26,7 @@ public class MissionService {
 
     private final RestaurantRepository restaurantRepository;
     private final MissionRepository missionRepository;
+    private final MemberMissionRepository memberMissionRepository;
 
     // 7주차 예제 - 식당 미션 생성 API
     @Transactional
@@ -96,5 +100,15 @@ public class MissionService {
                 nextCursor,
                 missionList.getSize()
         );
+    }
+
+    @Transactional
+    public MissionResDTO.CompletedMissionDTO completeMission(Long memberId, Long memberMissionId) {
+        MemberMission memberMission = memberMissionRepository.findByIdAndMember_Id(memberMissionId, memberId)
+                .orElseThrow(() -> new MissionException(MissionErrorCode.MEMBER_MISSION_NOT_FOUND));
+
+        memberMission.updateStatus(MissionStatus.COMPLETED);
+
+        return MissionConverter.toCompletedMissionDTO(memberMission);
     }
 }

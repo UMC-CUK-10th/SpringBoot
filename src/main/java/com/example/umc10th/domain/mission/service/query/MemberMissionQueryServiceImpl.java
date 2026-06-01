@@ -50,18 +50,18 @@ public class MemberMissionQueryServiceImpl implements MemberMissionQueryService 
     // 진행 중인 미션 조회 API
     @Override
     @Transactional(readOnly = true)
-    public MemberMissionResDTO.InProgressMissionListDTO getInProgressMissions(Long memberId, Integer page) {
+    public MemberMissionResDTO.MissionListDTO getInProgressMissions(Long memberId, Integer page) {
         PageRequest pageRequest = createPageRequest(PAGE_SIZE, page);
         var missions = findMissions(memberId, MissionStatus.IN_PROGRESS, pageRequest);
-        return MemberMissionConverter.toInProgressMissionListDTO(missions);
+        return MemberMissionConverter.toMissionListDTO(missions);
     }
 
     // 진행 완료한 미션 조회 API
     @Override
     @Transactional(readOnly = true)
-    public MemberMissionResDTO.CompletedMissionListDTO getCompletedMissions(Long memberId, Integer page) {
+    public MemberMissionResDTO.MissionListDTO getCompletedMissions(Long memberId, Integer page) {
         PageRequest pageRequest = createPageRequest(PAGE_SIZE, page);
         var missions = findMissions(memberId, MissionStatus.COMPLETED, pageRequest);
-        return MemberMissionConverter.toCompletedMissionListDTO(missions);
+        return MemberMissionConverter.toMissionListDTO(missions);
     }
 }

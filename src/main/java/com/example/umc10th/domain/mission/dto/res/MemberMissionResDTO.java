@@ -33,49 +33,10 @@ public class MemberMissionResDTO {
             Sort sort
     ) {}
 
-    // 진행 중인 미션 조회 DTO
+    // 미션 목록 DTO (status 값으로 진행 중/완료 상태를 구분)
     @Builder
-    public record InProgressMissionDTO(
-            Long memberMissionId,
-            Long missionId,
-            Long restId,
-            String restName,
-            String conditional,
-            Long price,
-            int point,
-            LocalDate deadline,
-            String status,
-            LocalDateTime updatedAt
-    ) {}
-
-    @Builder
-    public record InProgressMissionListDTO(
-            List<InProgressMissionDTO> missionList,
-            Integer listSize,
-            Integer totalPage,
-            Long totalElements,
-            Boolean isFirst,
-            Boolean isLast
-    ) {}
-
-    // 진행 완료한 미션 조회 DTO
-    @Builder
-    public record CompletedMissionDTO(
-            Long memberMissionId,
-            Long missionId,
-            Long restId,
-            String restName,
-            String conditional,
-            Long price,
-            int point,
-            LocalDate deadline,
-            String status,
-            LocalDateTime updatedAt
-    ) {}
-
-    @Builder
-    public record CompletedMissionListDTO(
-            List<CompletedMissionDTO> missionList,
+    public record MissionListDTO(
+            List<MemberMissionDTO> missionList,
             Integer listSize,
             Integer totalPage,
             Long totalElements,
