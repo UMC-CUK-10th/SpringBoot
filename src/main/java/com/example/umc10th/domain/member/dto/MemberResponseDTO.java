@@ -42,6 +42,12 @@ public class MemberResponseDTO {
             Integer totalPoints
     ){}
 
+    // 로그인
+    @Builder
+    public record LoginInfo(
+            String token
+    ){}
+
     // 홈 화면
 //    @Builder
 //    public record Home(

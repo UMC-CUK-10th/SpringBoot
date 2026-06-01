@@ -2,13 +2,12 @@ package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.entity.mapping.MemberFood;
 import com.example.umc10th.domain.member.enums.Gender;
+import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.domain.mission.entity.mapping.MissionUser;
-import com.example.umc10th.domain.review.entity.Review;
 import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +55,12 @@ public class Member extends BaseEntity {
     @Column(name = "total_point", nullable = false)
     @Builder.Default
     private Integer totalPoints = 0;
+
+//    @Column(name = "socical_uid", nullable = false)
+//    private String socialUid;
+//
+//    @Column(name = "social_type", nullable = false)
+//    private SocialType socialType;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<MemberFood> memberFoodList = new ArrayList<>();

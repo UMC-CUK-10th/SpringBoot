@@ -70,6 +70,15 @@ public class MemberConverter {
                 .build();
     }
 
+    // 로그인
+    public static MemberResponseDTO.LoginInfo toLoginInfo(
+            String token
+    ){
+        return MemberResponseDTO.LoginInfo.builder()
+                .token(token)
+                .build();
+    }
+
     // 홈 화면
 //    public static MemberResponseDTO.Home toHome(
 //            Member member,

@@ -58,14 +58,13 @@ public class MemberAuthController {
 
     // 로그인
     @PostMapping("/users/login")
-    public APIResponse<Object> login(
+    public APIResponse<MemberResponseDTO.LoginInfo> login(
             @RequestBody @Valid MemberRequestDTO.LoginInfo dto
     ){
-
-        // 로그인 로직
+        MemberResponseDTO.LoginInfo resDTO = memberService.login(dto);
 
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return APIResponse.onSuccess(code,null);
+        return APIResponse.onSuccess(code,resDTO);
     }
 
     // 로그아웃

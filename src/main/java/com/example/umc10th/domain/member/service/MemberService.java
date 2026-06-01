@@ -12,18 +12,11 @@ import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.FoodRepository;
 import com.example.umc10th.domain.member.repository.MemberFoodRepository;
 import com.example.umc10th.domain.member.repository.MemberRepository;
-import com.example.umc10th.domain.mission.converter.MissionConverter;
-import com.example.umc10th.domain.mission.dto.MissionResponseDTO;
-import com.example.umc10th.domain.mission.entity.Mission;
-import com.example.umc10th.domain.mission.repository.MissionRepository;
-import com.example.umc10th.domain.store.entity.Local;
-import com.example.umc10th.domain.store.repository.LocalRepository;
 import com.example.umc10th.global.apiPayload.code.GeneralErrorCode;
 import com.example.umc10th.global.apiPayload.exception.ProjectException;
+import com.example.umc10th.global.security.entity.AuthMember;
+import com.example.umc10th.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +33,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final FoodRepository foodRepository;
     private final MemberFoodRepository memberFoodRepository;
-    private final LocalRepository localRepository;
-    private final MissionRepository missionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     // 회원 가입
     @Transactional
@@ -93,12 +85,27 @@ public class MemberService {
 
     // 마이 페이지
     public MemberResponseDTO.MyPage getMyPage (
-            MemberRequestDTO.MyPage dto
+            AuthMember member
     ){
-        Member member = memberRepository.findById(dto.id())
+
+        return MemberConverter.toMyPage(member.getMember());
+    }
+
+    // 로그인
+    public MemberResponseDTO.LoginInfo login(
+            MemberRequestDTO.LoginInfo dto
+    ){
+        Member member = memberRepository.findByEmail(dto.username())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        return MemberConverter.toMyPage(member);
+        if(!passwordEncoder.matches(dto.password(), member.getPassword())){
+            throw new MemberException(MemberErrorCode.INVALID_CREDENTIALS);
+        }
+
+        AuthMember authMember = new AuthMember(member);
+        String token = jwtUtil.createAccessToken(authMember);
+
+        return MemberConverter.toLoginInfo(token);
     }
 
 
