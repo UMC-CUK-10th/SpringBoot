@@ -31,9 +31,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-
-        // Spring Security에서 username 역할
-        return users.getEmail();
+        return users.getUsername();
     }
 
     @Override

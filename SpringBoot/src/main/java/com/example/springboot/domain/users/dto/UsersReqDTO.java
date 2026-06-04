@@ -35,4 +35,14 @@ public class UsersReqDTO {
             Long userId,
             Integer page
     ) {}
+
+    // 로그인
+    public record LoginDTO(
+            @NotBlank
+            @Email
+            String email,
+
+            @NotBlank
+            String userPassword
+    ) {}
 }

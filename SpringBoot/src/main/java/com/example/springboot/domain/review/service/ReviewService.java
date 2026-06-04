@@ -30,7 +30,7 @@ public class ReviewService {
                 .orElseThrow(() -> new UsersException(UsersErrorCode.MISSION_NOT_FOUND));
 
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         Review review = Review.builder()
                 .users(user)

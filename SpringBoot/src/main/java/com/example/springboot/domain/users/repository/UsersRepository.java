@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByEmail(String email);
+    Optional<Users> findBySocialTypeAndSocialUid(com.example.springboot.domain.users.entity.enums.SocialType socialType, String socialUid);
+    Optional<Users> findByUsername(String name);
 }

@@ -65,4 +65,12 @@ public class UsersResDTO {
             String content,
             LocalDateTime createdAt
     ) {}
+
+    // 로그인 결과
+    @Builder
+    public record LoginResultDTO(
+            Long userId,
+            String email,
+            String accessToken
+    ) {}
 }

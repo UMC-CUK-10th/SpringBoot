@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.springboot.global.security.entity.AuthUsers;
+import com.example.springboot.global.security.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,7 @@ public class UsersService {
     private final RegionRepository regionRepository;
     private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     // 회원가입
     @Transactional
@@ -52,7 +55,7 @@ public class UsersService {
                 .userPassword(
                         passwordEncoder.encode(request.userPassword())
                 )
-                .name(request.userName())
+                .username(request.userName())
                 .nickname(request.nickname())
                 .userPhoneNumber(request.userPhoneNumber())
                 .userStatus(UserStatus.ACTIVE)
@@ -62,16 +65,30 @@ public class UsersService {
         return usersRepository.save(users);
     }
 
+    // 로그인
+    @Transactional
+    public UsersResDTO.LoginResultDTO login(UsersReqDTO.LoginDTO request) {
+        Users users = usersRepository.findByEmail(request.email())
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.userPassword(), users.getUserPassword())) {
+            throw new UsersException(UsersErrorCode.INVALID_PASSWORD);
+        }
+
+        AuthUsers authUsers = new AuthUsers(users);
+        String accessToken = jwtUtil.createAccessToken(authUsers);
+
+        return UsersConverter.toLoginResultDTO(users, accessToken);
+    }
+
     // 마이페이지 정보 조회
-    public UsersResDTO.GetInfo getMyInfo(Long userId) {
-        Users users = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+    public UsersResDTO.GetInfo getMyInfo(Users users) {
         return UsersConverter.toGetInfo(users);
     }
 
     public List<MissionResDTO.UserMissionListDTO> getMyMissions(Long userId, UserMissionStatus status, Integer page) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         Page<UserMission> userMissions = userMissionRepository.findByUsersAndUserMissionStatus(user, status, PageRequest.of(page, 10));
         return MissionConverter.toUserMissionListDTOList(userMissions);
@@ -79,7 +96,7 @@ public class UsersService {
 
     public UsersResDTO.OngoingMissionListDTO getOngoingMissions(UsersReqDTO.OngoingMissionReqDTO request) {
         Users user = usersRepository.findById(request.userId())
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         Integer page = (request.page() == null) ? 0 : request.page();
         Page<UserMission> userMissions = userMissionRepository.findByUsersAndUserMissionStatus(
@@ -90,7 +107,7 @@ public class UsersService {
 
     public UsersResDTO.ReviewListDTO getMyReviews(Long userId, String sortBy, Long lastId, Integer lastFavorite, Integer size) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
 
         int pageSize = (size == null) ? 10 : size;
         org.springframework.data.domain.Slice<com.example.springboot.domain.review.entity.Review> reviews;
@@ -107,7 +124,7 @@ public class UsersService {
 
     public UsersResDTO.HomeResDTO getHome(Long userId, Long regionId, Integer page) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new UsersException(UsersErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(UsersErrorCode.USERS_NOT_FOUND));
         
         Region region = regionRepository.findById(regionId)
                 .orElseThrow(() -> new UsersException(UsersErrorCode.REGION_NOT_FOUND));

@@ -24,8 +24,8 @@ public class Users {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 15)
-    private String name;
+    @Column(name = "username", nullable = false, length = 15)
+    private String username;
 
     @Column(name = "nickname", nullable = false, length = 15)
     private String nickname;
@@ -40,14 +40,21 @@ public class Users {
     @Column(name = "user_phone_number", length = 15)
     private String userPhoneNumber;
 
-    @Column(name = "email", length = 50, unique = true)
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
     @Column(name = "user_point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private Long userPoint;
 
-    @Column(name = "user_password", nullable = false, length = 100)
+    @Column(name = "user_password", length = 100)
     private String userPassword;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "social_type", length = 20)
+    private com.example.springboot.domain.users.entity.enums.SocialType socialType;
+
+    @Column(name = "social_uid", length = 100)
+    private String socialUid;
 
     @CreatedDate
     @Column(name = "user_created_at", updatable = false)
