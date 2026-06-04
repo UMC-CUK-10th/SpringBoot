@@ -7,4 +7,8 @@ public class UserResDTO {
             String nickname,
             int point
     ) {}
+
+    public record LoginResponse(
+            String accessToken
+    ) {}
 }

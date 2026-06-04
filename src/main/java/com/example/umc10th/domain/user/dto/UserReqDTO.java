@@ -17,6 +17,11 @@ public class UserReqDTO {
 
     ) {}
 
+    public record Login(
+            String email,
+            String password
+    ) {}
+
     public record UpdateUser(
             String nickname
     ) {}
