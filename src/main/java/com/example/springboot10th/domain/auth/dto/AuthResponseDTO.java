@@ -13,6 +13,7 @@ public class AuthResponseDTO {
     @AllArgsConstructor
     public static class SignupResponse {
         private Long memberId;
+        private String accessToken;  
     }
 
     @Builder
@@ -21,8 +22,9 @@ public class AuthResponseDTO {
     @AllArgsConstructor
     public static class LoginResponse {
         private Long memberId;
+        private String accessToken;  
     }
-    
+
     @Builder
     @Getter
     @NoArgsConstructor
@@ -31,3 +33,4 @@ public class AuthResponseDTO {
         private Long memberId;
     }
 }
+

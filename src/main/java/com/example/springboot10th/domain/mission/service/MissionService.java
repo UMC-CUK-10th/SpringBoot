@@ -45,7 +45,7 @@ public class MissionService {
             Integer pageNumber,
             String sort) {
 
-        // 정렬 정보 생성
+        
         Sort sortInfo;
         if (sort != null) {
             sortInfo = Sort.by(sort);
@@ -53,16 +53,16 @@ public class MissionService {
             sortInfo = Sort.by("id").descending();
         }
 
-        // 페이지 정보들을 PageRequest로 만들기
+        
         PageRequest pageRequest = PageRequest.of(
                 pageNumber,
                 pageSize,
                 sortInfo);
 
-        // 가게 내 미션들 조회
+        
         Page<Mission> missionList = missionRepository.findAllByStoreId(storeId, pageRequest);
 
-        // 미션들 응답 DTO로 포장하기
+        
         return MissionConverter.toPagination(
                 missionList.map(MissionConverter::toGetMission).toList(),
                 missionList.getNumber(),

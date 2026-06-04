@@ -11,11 +11,11 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-/**
- * 인증(Authentication) 실패 핸들러.
- * 로그인하지 않은 상태에서 Private API에 접근할 때 (401 Unauthorized) 호출된다.
- * 기존 HTML 로그인 페이지 리다이렉트 대신 응답 통일 형식(ApiResponse)으로 반환한다.
- */
+
+
+
+
+
 public class CustomEntryPoint implements AuthenticationEntryPoint {
 
     @Override

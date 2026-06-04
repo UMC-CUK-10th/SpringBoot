@@ -31,8 +31,8 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(nullable = false, length = 200)
-    private String password;
+    @Column(length = 200)
+    private String password;  
 
     @Column(nullable = false, length = 20)
     private String phoneNum;
@@ -63,4 +63,8 @@ public class User extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviewList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserSocial> userSocialList = new ArrayList<>();
 }

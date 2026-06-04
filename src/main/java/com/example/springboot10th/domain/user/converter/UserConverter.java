@@ -16,7 +16,7 @@ public class UserConverter {
                 .email(user.getEmail())
                 .name(user.getName())
                 .nickname(user.getNickname())
-                .gender("NONE")
+                .gender(user.getGender() != null ? user.getGender().name() : "NONE")
                 .build();
     }
 

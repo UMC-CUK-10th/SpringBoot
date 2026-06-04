@@ -11,11 +11,11 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
 
-/**
- * 인가(Authorization) 실패 핸들러.
- * 인증은 됐지만 해당 리소스에 대한 권한이 없을 때 (403 Forbidden) 호출된다.
- * 기존 HTML 에러 응답 대신 응답 통일 형식(ApiResponse)으로 반환한다.
- */
+
+
+
+
+
 public class CustomAccessDenied implements AccessDeniedHandler {
 
     @Override

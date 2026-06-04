@@ -7,12 +7,12 @@ import com.example.springboot10th.domain.user.enums.Gender;
 
 public class AuthConverter {
 
-    /**
-     * 회원가입 요청 DTO → User 엔티티 변환.
-     * 비밀번호는 서비스 계층에서 BCrypt 인코딩 후 전달받는다.
-     */
+    
+
+
+
     public static User toUser(AuthRequestDTO.SignupRequest request, String encodedPassword) {
-        // gender 문자열 → enum 변환 (null 또는 알 수 없는 값이면 NONE)
+        
         Gender gender = parseGender(request.getGender());
 
         return User.builder()
@@ -29,7 +29,7 @@ public class AuthConverter {
                 .build();
     }
 
-    // "남" → MALE, "여" → FEMALE, 나머지 → NONE
+    
     private static Gender parseGender(String genderStr) {
         if (genderStr == null) return Gender.NONE;
         return switch (genderStr) {
@@ -40,15 +40,17 @@ public class AuthConverter {
     }
 
 
-    public static AuthResponseDTO.SignupResponse toSignupResponse(User user) {
+    public static AuthResponseDTO.SignupResponse toSignupResponse(User user, String accessToken) {
         return AuthResponseDTO.SignupResponse.builder()
                 .memberId(user.getId())
+                .accessToken(accessToken)
                 .build();
     }
 
-    public static AuthResponseDTO.LoginResponse toLoginResponse(User user) {
+    public static AuthResponseDTO.LoginResponse toLoginResponse(User user, String accessToken) {
         return AuthResponseDTO.LoginResponse.builder()
                 .memberId(user.getId())
+                .accessToken(accessToken)
                 .build();
     }
 

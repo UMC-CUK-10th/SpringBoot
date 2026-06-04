@@ -5,6 +5,7 @@ import com.example.springboot10th.domain.mission.enums.MissionStatus;
 import com.example.springboot10th.domain.mission.repository.UserMissionRepository;
 import com.example.springboot10th.domain.user.entity.User;
 import com.example.springboot10th.domain.user.repository.UserRepository;
+import com.example.springboot10th.global.security.AuthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +24,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMissionRepository userMissionRepository;
 
+    
     @Override
     public UserResponseDTO.UserProfileResponse getMyPage(Long userId) {
         User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return UserConverter.toUserProfileResponse(user);
+    }
+
+    
+    @Override
+    public UserResponseDTO.UserProfileResponse getMyPage(AuthMember authMember) {
+        User user = userRepository.findById(authMember.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         return UserConverter.toUserProfileResponse(user);
     }

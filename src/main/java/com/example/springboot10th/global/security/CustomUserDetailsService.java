@@ -8,11 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-/**
- * Spring Security의 UserDetailsService를 구현한 서비스.
- * 로그인 시 UsernamePasswordAuthenticationFilter에 의해 호출되며,
- * DB에서 사용자 정보를 조회해 AuthMember(UserDetails) 객체로 반환한다.
- */
+
+
+
+
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
