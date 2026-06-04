@@ -7,7 +7,6 @@ import com.example.umc_spring.domain.member.entity.Member;
 import com.example.umc_spring.domain.member.repository.MemberRepository;
 import com.example.umc_spring.domain.member.security.AuthMember;
 import com.example.umc_spring.domain.member.security.JwtUtil;
-import com.example.umc_spring.domain.mission.dto.MissionResDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements MemberService {
+public class MemberCommandServiceImpl implements MemberCommandService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -24,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberResDTO.JoinResultDTO join(MemberReqDTO.JoinDTO request) {
+    public MemberResDTO.JoinResultDTO joinMember(MemberReqDTO.JoinDTO request) {
 
         if (memberRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
@@ -40,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResDTO.LoginResultDTO login(MemberReqDTO.LoginDTO request) {
+    public MemberResDTO.LoginResultDTO loginMember(MemberReqDTO.LoginDTO request) {
 
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -71,10 +70,5 @@ public class MemberServiceImpl implements MemberService {
                 inProgressMissionCount,
                 completedMissionCount
         );
-    }
-
-    @Override
-    public MissionResDTO.MissionListDTO getHomeMissions(String location, Integer page, Integer size) {
-        return null;
     }
 }

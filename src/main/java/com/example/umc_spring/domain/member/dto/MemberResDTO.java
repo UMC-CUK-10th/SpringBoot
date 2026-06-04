@@ -10,18 +10,35 @@ public class MemberResDTO {
     @Getter
     @Builder
     public static class MyPageDTO {
+
         private Long userId;
+
         private String userName;
+
         private Integer userPoint;
+
         private Long reviewCount;
+
         private Long inProgressMissionCount;
+
         private Long completedMissionCount;
     }
 
     @Getter
     @Builder
     public static class JoinResultDTO {
+
         private Long memberId;
+
         private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @Builder
+    public static class LoginResultDTO {
+
+        private Long memberId;
+
+        private String accessToken;
     }
 }
